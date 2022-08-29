@@ -2676,7 +2676,12 @@ tr {
     line-height: 16px
 }
 
+.crumbs {
+    list-style: none;
+}
+
 .breadcrumb-item a,
+.crumbs a,
 .crumbs {
     display: flex;
     align-items: center;
@@ -2692,7 +2697,7 @@ tr {
 }
 
 .breadcrumb-item a::after,
-.crumbs:not(:last-of-type):after {
+.crumbs:not(:last-of-type) a:after {
     content: "";
     display: flex;
     width: 9px;
@@ -3527,7 +3532,7 @@ tr {
     }
 
     .header_tel svg {
-        display: block
+        display: block !important;
     }
 
     .header_tel span {
@@ -4138,6 +4143,7 @@ tr {
 
     .breadcrumb li,
     .breadcrumb-item a,
+    .crumbs a,
     .crumbs {
         font-size: 12px
     }

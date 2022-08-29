@@ -106,11 +106,11 @@ function breadcrumbs()
     $text['page'] = 'Страница %s';
     $text['cpage'] = 'Страница комментариев %s';
 
-    $wrap_before = '<div class="breadcrumbs-wrapper"><ul itemscope itemtype="http://schema.org/BreadcrumbList" class="breadcrumbs">';
-    $wrap_after = '</ul></div>';
+    $wrap_before = '<section class="bread_crumbs">';
+    $wrap_after = '</section>';
     $sep = '';
-    $before = '<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="breadcrumbs__current post current-item"><span itemprop="name">';
-    $after = '</span><meta itemprop="position" content="3" /></li>';
+    $before = '<li class="crumbs active">';
+    $after = '</li>';
 
     $show_on_home = 0;
     $show_home_link = 1;
@@ -123,9 +123,8 @@ function breadcrumbs()
     $cpt = get_post_type();
     $url = "{$home_url}{$cpt}/";
 
-    $link = '<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
-    $link .= '<a itemprop="item" class="breadcrumbs__link" href="%1$s"><span itemprop="name">%2$s</span></a>';
-    $link .= '<meta itemprop="position" content="%3$s" />';
+    $link = '<li class="crumbs">';
+    $link .= '<a href="%1$s">%2$s</a>';
     $link .= '</li>';
     $parent_id = ($post) ? $post->post_parent : '';
     $home_link = sprintf($link, $home_url, $text['home'], 1);
