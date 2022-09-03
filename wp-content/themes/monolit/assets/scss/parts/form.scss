@@ -4,6 +4,7 @@
     .wpforms-form {
         max-width: 500px;
         margin: 0 auto;
+        position: relative;
     }
 }
 
@@ -42,6 +43,12 @@
         padding: 15px 20px !important;
         appearance: none !important;
         border-radius: 12px !important;
+        font-weight: 500;
+        font-size: 16px;
+
+        &::placeholder {
+            color: #a5a5a5 !important;
+        }
     }
 
     .wpforms-submit-container {
@@ -49,8 +56,8 @@
     }
 
     .wpforms-submit {
-        background: rgba(22,161,238,1) !important;
-        background: linear-gradient(61deg, rgba(7,96,167,1) 36%, rgba(22,161,238,1) 100%) !important;
+        background: rgba(22, 161, 238, 1) !important;
+        background: linear-gradient(61deg, rgba(7, 96, 167, 1) 36%, rgba(22, 161, 238, 1) 100%) !important;
         color: #fff !important;
         border-radius: 12px !important;
         border: none !important;
@@ -67,7 +74,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(22,161,238,1);
+            background: rgba(22, 161, 238, 1);
             transition: opacity 0.5s ease-out;
             z-index: -1;
             opacity: 0;
@@ -85,5 +92,68 @@
     .wpforms-error {
         margin: 3px 0 !important;
         opacity: 0.7 !important;
+    }
+}
+
+.contact-form-phone {
+    @media (min-width: 601px) {
+        .wpforms-submit-container {
+            text-align: left;
+        }
+    }
+
+    .wpforms-form {
+        max-width: 400px;
+
+        @media (max-width: 600px) {
+            padding-bottom: 70px;
+        }
+    }
+}
+
+.contact-form-tel-wrap {
+    position: absolute !important;
+    right: 0;
+    bottom: 5px;
+    z-index: 1;
+
+    @media (max-width: 600px) {
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+    }
+}
+
+.contact-form-tel {
+    a {
+        position: relative !important;
+        color: rgba(22, 161, 238, 1) !important;
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        letter-spacing: 3px !important;
+        text-decoration: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: .2s !important;
+
+        &:before {
+            content: '';
+            background: url('../img/phone.svg') center / contain no-repeat;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            transition: .2s;
+        }
+
+        @media (min-width: 1025px) {
+            &:hover {
+                color: rgba(7, 96, 167, 1) !important;
+
+                &:before {
+                    transform: scale(1.1);
+                }
+            }
+        }
     }
 }

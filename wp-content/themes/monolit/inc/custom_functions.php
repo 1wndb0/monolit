@@ -20,14 +20,25 @@ function get_template_part_var($template, $data = [])
 function getPosts($params = []): array
 {
     $args = array_merge([
-        'orderby'          => 'date',
-        'order'            => 'desc',
+        'post_type'        => 'page',
         'post_status'      => 'publish',
+        'order'            => 'asc',
         'suppress_filters' => false,
+        'numberposts'      => -1,
 
     ], $params);
 
     return get_posts($args);
+}
+
+function getServices($params = []): array
+{
+    $args = array_merge([
+        'meta_key'   => '_wp_page_template',
+        'meta_value' => 'pages/service-type.php',
+    ], $params);
+
+    return getPosts($args);
 }
 
 function footerWidgets()
@@ -69,30 +80,6 @@ function getField($field, string $class = '', string $tag = 'div')
     }
 
     echo sprintf('<%1$s%2$s>%3$s</%1$s>', $tag, $class, $field);
-}
-
-function getServices()
-{
-    return get_terms([
-        'taxonomy'   => 'services_categories',
-        'hide_empty' => false,
-        'orderby'    => 'meta_value_num',
-        'meta_key'   => 'service_order',
-        'meta_type'  => 'NUMERIC',
-        'order'      => 'asc',
-    ]);
-}
-
-function getTypes()
-{
-    return get_posts([
-        'post_type'        => 'types',
-        'orderby'          => 'menu_order',
-        'order'            => 'asc',
-        'post_status'      => 'publish',
-        'numberposts'      => -1,
-        'suppress_filters' => false,
-    ]);
 }
 
 function breadcrumbs()

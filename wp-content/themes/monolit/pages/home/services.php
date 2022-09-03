@@ -1,4 +1,6 @@
 <?php
+$services = getServices();
+
 if (empty($services)) {
     return;
 }
@@ -11,20 +13,17 @@ if (empty($services)) {
                 <div class="services_item">
                     <div class="services_title_container">
                         <h2 class="services_item_title">
-                            <?php echo $service->name; ?>
+                            <?php echo $service->post_title; ?>
                         </h2>
                     </div>
                     <ul class="servises_list">
-                        <?php get_template_part_var('pages/parts/taxonomy-posts', ['term' => $service]); ?>
+                        <?php get_template_part_var('pages/parts/services-list', ['id' => $service->ID]); ?>
                     </ul>
-                    <a href="<?php echo get_term_link($service); ?>" class="servises_button">
+                    <a href="<?php echo get_page_link($service->ID); ?>" class="servises_button">
                         <?php _e('Перейти', 'monolit'); ?>
                     </a>
                 </div>
             </div>
-            <?php if ($index == 1):
-                get_template_part_var('pages/parts/types-posts');
-            endif; ?>
         <?php endforeach; ?>
     </div>
 </section>

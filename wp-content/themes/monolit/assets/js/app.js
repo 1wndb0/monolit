@@ -23,6 +23,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    if (window.innerWidth <= 1200) {
+        var menuItemsHasChildren = document.querySelectorAll('#menu-main-header .menu-item-has-children');
+        menuItemsHasChildren.forEach((item) => {
+            item.addEventListener('click', function () {
+                this.classList.toggle('active-menu-item');
+            });
+        });
+    }
+
     function detectSearchInput(formInput, searchWrap)
     {
         if (!formInput && !searchWrap.classList.contains('active')) {

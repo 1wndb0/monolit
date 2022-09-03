@@ -4,15 +4,9 @@
  */
 get_header();
 
-$services = getServices();
+get_template_part('pages/home/hero');
 
-get_template_part_var('pages/home/hero', [
-    'services' => $services,
-]);
-
-get_template_part_var('pages/home/services', [
-    'services' => $services,
-]);
+get_template_part('pages/home/services');
 
 get_template_part_var('pages/general/benefits');
 

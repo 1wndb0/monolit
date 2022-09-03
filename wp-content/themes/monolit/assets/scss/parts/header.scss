@@ -101,7 +101,13 @@
         @media (max-width: 1200px) {
             transform: none !important;
             width: 100% !important;
-            position: static;
+            position: relative;
+            opacity: 1;
+            visibility: visible;
+            display: none;
+            left: 0;
+            top: 0;
+            padding-left: 10px;
 
             li {
                 border: 0 !important;
@@ -122,7 +128,7 @@
 
                 a {
                     font-size: 18px;
-                    line-height: 20px;
+                    line-height: 22px;
                     margin-right: 24px;
                 }
             }
@@ -133,6 +139,11 @@
             margin: 0;
             padding: 15px 15px 10px 15px;
             border: 1px solid rgba(196, 196, 196, .5);
+
+            @media (max-width: 1200px) {
+                padding-top: 5px;
+                padding-left: 5px;
+            }
 
             &:not(:last-of-type) {
                 border-bottom: 0;
@@ -176,11 +187,10 @@
             }
 
             @media (max-width: 1200px) {
+                z-index: 10;
                 &.active-menu-item {
                     & > .sub-menu {
-                        opacity: 1;
-                        z-index: 1000;
-                        visibility: visible;
+                        display: block;
                     }
                 }
 
@@ -209,8 +219,8 @@
             }
 
             @media (max-width: 1200px) {
-                font-size: 22px;
-                line-height: 26px;
+                font-size: 20px;
+                line-height: 22px;
             }
         }
     }
@@ -233,6 +243,18 @@
                 background-color: #fff;
                 border: 1px solid rgba(196, 196, 196, .5);
 
+                @media (max-width: 1200px) {
+                    position: relative;
+                    opacity: 1;
+                    visibility: visible;
+                    display: none;
+                    left: 0;
+                    top: 0;
+                    border: none;
+                    padding-top: 10px;
+                    padding-left: 10px;
+                }
+
                 li {
                     padding-top: 10px;
                     padding-bottom: 15px;
@@ -244,6 +266,12 @@
                 .sub-menu {
                     opacity: 1;
                     z-index: 10001;
+                }
+            }
+
+            @media (max-width: 1200px) {
+                &.active-menu-item {
+                    display: block;
                 }
             }
         }

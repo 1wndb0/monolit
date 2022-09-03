@@ -8,7 +8,6 @@ add_filter('upload_mimes', 'upload_allow_types');
 add_filter('show_admin_bar', '__return_false');
 add_filter('gutenberg_use_widgets_block_editor', '__return_false');
 add_filter('use_widgets_block_editor', '__return_false');
-add_filter('post_type_link', 'change_post_type_link', 10, 4);
 
 function register_scripts()
 {
@@ -50,6 +49,8 @@ function theme_setup_settings()
         'our_company'  => 'Our Company',
     ]);
 
+    add_post_type_support('page', 'excerpt');
+
     add_theme_support('post-thumbnails', ['articles', 'page']);
     add_theme_support('custom-logo', [
         'unlink-homepage-logo' => true,
@@ -70,27 +71,4 @@ function remove_default_post_types()
 {
     remove_menu_page('edit.php');
     remove_menu_page('edit-comments.php');
-}
-
-function change_post_type_link($postLink, $post)
-{
-    if ($post->post_type !== 'services') {
-        return $postLink;
-    }
-
-    if (!strpos($postLink, '%services_cat%')) {
-        return $postLink;
-    }
-
-    if (defined('ICL_LANGUAGE_CODE') && ICL_LANGUAGE_CODE == 'ru') {
-        $terms = get_the_terms($post->ID, 'services_categories_ru');
-    } else {
-        $terms = get_the_terms($post->ID, 'services_categories');
-    }
-
-    if (!empty($terms)) {
-        return str_replace('%services_cat%', $terms[0]->slug, $postLink);
-    } else {
-        return str_replace('%services_cat%', 'category', $postLink);
-    }
 }

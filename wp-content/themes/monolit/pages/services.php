@@ -6,8 +6,6 @@
 get_header();
 
 $services = getServices();
-$roomType = get_post_type_object('types');
-$roomImg = get_field('room_types_img', 'options') ?: '';
 ?>
 
 <section class="_services">
@@ -15,39 +13,26 @@ $roomImg = get_field('room_types_img', 'options') ?: '';
         <?php breadcrumbs(); ?>
         <div class="services_list">
             <?php if (!empty($services)):
-                foreach ($services as $service):
-                    $serviceFields = get_fields('term_' . $service->term_id);?>
+                foreach ($services as $service): ?>
                     <div class="service_item">
-                        <a href="<?php echo get_term_link($service); ?>" class="service_body">
+                        <a href="<?php echo get_page_link($service); ?>" class="service_body">
                             <div class="service_img">
-                                <?php if ($serviceFields['service_image']): ?>
-                                    <img src="<?php echo $serviceFields['service_image']; ?>" alt="<?php echo $service->name; ?>">
+                                <?php if (has_post_thumbnail($service)): ?>
+                                    <img src="<?php echo get_the_post_thumbnail_url($service); ?>" alt="<?php echo $service->post_title; ?>">
                                 <?php endif; ?>
                             </div>
                             <h4 class="service_title">
-                                <?php echo $service->name; ?>
+                                <?php echo $service->post_title; ?>
                             </h4>
                         </a>
                     </div>
                 <?php endforeach;
-            endif;
-            if ($roomType): ?>
-                <div class="service_item">
-                    <a href="<?php echo get_post_type_archive_link('types'); ?>" class="service_body">
-                        <div class="service_img">
-                            <?php if ($roomImg): ?>
-                                <img src="<?php echo $roomImg; ?>" alt="<?php echo $roomType->label; ?>">
-                            <?php endif; ?>
-                        </div>
-                        <h4 class="service_title">
-                            <?php echo $roomType->label; ?>
-                        </h4>
-                    </a>
-                </div>
-            <?php endif; ?>
+            endif; ?>
         </div>
     </div>
 </section>
 
 <?php
+get_template_part('pages/general/contact-form-small');
+
 get_footer();

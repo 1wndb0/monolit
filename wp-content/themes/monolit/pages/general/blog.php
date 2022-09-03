@@ -6,6 +6,7 @@ $blogUrl = get_field('blog_url', 'options');
 $posts = getPosts([
     'post_type'   => 'articles',
     'numberposts' => $count ?: 3,
+    'order'       => 'desc',
 ]);
 
 if (empty($posts)) {
