@@ -4,6 +4,7 @@
  */
 get_header();
 $post = get_post();
+breadcrumbs();
 ?>
 
 <section class="services_main">
@@ -21,4 +22,13 @@ $post = get_post();
     </div>
 </section>
 
-<?php get_footer(); ?>
+<?php
+get_template_part('pages/general/price');
+get_template_part('pages/general/contact-form-price');
+get_template_part('pages/general/benefits');
+get_template_part('pages/general/partners');
+get_template_part('pages/general/faq');
+get_template_part('pages/general/gallery');
+get_template_part('pages/general/contact-form-main');
+
+get_footer();

@@ -3,7 +3,8 @@
 function createPostTypes()
 {
     createPostType('articles', [
-        'labels'   => [
+        'has_archive' => false,
+        'labels'      => [
             'name'          => __('Блог', 'monolit'),
             'singular_name' => __('Блог', 'monolit'),
             'add_new'       => __('Добавить новый Пост', 'monolit'),

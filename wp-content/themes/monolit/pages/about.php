@@ -10,7 +10,7 @@ get_template_part_var('pages/about/hero', ['fields' => $fields]);
 get_template_part_var('pages/about/worth', ['fields' => $fields]);
 get_template_part_var('pages/about/mission', ['fields' => $fields]);
 get_template_part_var('pages/general/partners');
-get_template_part_var('pages/general/contact-form');
+get_template_part_var('pages/general/contact-form-main');
 
 get_footer();
 

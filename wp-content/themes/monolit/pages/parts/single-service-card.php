@@ -13,11 +13,12 @@ if (empty($posts)) {
 ?>
 
 <?php foreach ($posts as $post): ?>
-    <div class="services_main_item_conteiner">
-        <a href="<?php echo get_the_post_thumbnail_url($post); ?>" class="services_main_item">
-            <p class="services_main_item_title">
+    <div class="services_main_item_container">
+        <a href="<?php echo get_page_link($post) ?>"
+           class="services__main_item"
+           style="background-image: url(<?php echo getImageUrl($post); ?>)">
+            <p class="services__main_item_title">
                 <?php echo $post->post_title; ?>
-                <span></span>
             </p>
         </a>
     </div>

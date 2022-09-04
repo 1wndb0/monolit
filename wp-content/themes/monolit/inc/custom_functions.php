@@ -82,6 +82,17 @@ function getField($field, string $class = '', string $tag = 'div')
     echo sprintf('<%1$s%2$s>%3$s</%1$s>', $tag, $class, $field);
 }
 
+function getImageUrl($post): string
+{
+    $defaultImage = get_template_directory_uri() . '/assets/img/noimage.svg';
+
+    if (empty($post)) {
+        return $defaultImage;
+    }
+
+    return get_the_post_thumbnail_url($post) ?: $defaultImage;
+}
+
 function breadcrumbs()
 {
     $text['home'] = __('Главная', 'monolit');

@@ -33,6 +33,6 @@ $services = getServices();
 </section>
 
 <?php
-get_template_part('pages/general/contact-form-small');
+get_template_part('pages/general/contact-form-phone');
 
 get_footer();
