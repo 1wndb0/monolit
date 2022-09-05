@@ -29,7 +29,7 @@ $phone = get_field('phone', 'options');
 <div class="overflow"></div>
 <?php get_template_part_var('pages/general/popup-form-question'); ?>
 
-<div class="preloader hide-preloader" id="preloader">
+<div class="preloader" id="preloader">
     <div class="preloader__row">
         <div class="plaseholder_container">
             <span class="arrow_first"></span>

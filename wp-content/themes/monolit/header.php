@@ -1,4 +1,7 @@
 <?php
+require "classes/Monolit_Menu.php";
+use classes\Monolit_Menu;
+
 $phone = get_field('phone', 'options');
 ?>
 
@@ -20,6 +23,7 @@ $phone = get_field('phone', 'options');
             <?php wp_nav_menu([
                 'theme_location'  => 'main_header',
                 'menu_class'      => 'menu-wrapper',
+                'walker'          => new Monolit_Menu()
             ]) ?>
 
             <?php do_action( 'wpml_footer_language_selector'); ?>

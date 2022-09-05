@@ -1,5 +1,15 @@
 const $ = jQuery;
 
+$(window).on('load', function () {
+    // Preloader
+    let preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.classList.add('hide-preloader');
+        $('body.preloader_active').removeClass('preloader_active');
+    }
+    // Preloader_end
+});
+
 document.addEventListener('DOMContentLoaded', function () {
 // $(document).ready(function () {
 
@@ -9,7 +19,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const slides = element[0].querySelector("[data-slides]")
             const btns = element[0].querySelectorAll("[data-carousel-button]")
             const activeSlide = slides.querySelectorAll(".slide")
+            const nextSliderArrow = document.querySelector(".services-carousel .carousel-button.next")
             activeSlide[0].dataset.active = true;
+
+            if (nextSliderArrow) {
+                setInterval(() => {
+                    nextSliderArrow.click()
+                }, 7000);
+            }
+
             btns.forEach(button => {
                 button.addEventListener("click", () => {
                     const offset = button.dataset.carouselButton === "next" ? 1 : -1
@@ -652,18 +670,6 @@ document.addEventListener('DOMContentLoaded', function () {
     //$("#id_phone, #id_pop_up_phone").mask("+380(99) 999-9999");
     // });
 }, false);
-
-
-$(window).on('load', function () {
-    // Preloader
-    let preloader = document.getElementById('preloader');
-    if (preloader) {
-        preloader.classList.add('hide-preloader');
-        $('body.preloader_active').removeClass('preloader_active');
-    }
-
-    // Preloader_end
-});
 
 // Header Tel
 

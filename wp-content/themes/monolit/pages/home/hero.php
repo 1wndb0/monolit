@@ -1,5 +1,5 @@
 <?php
-$services = getServices(['exclude' => [1970,1967]]);
+$services = getServices();
 
 if (empty($services)) {
     return;
@@ -7,7 +7,7 @@ if (empty($services)) {
 ?>
 
 <section class="main">
-    <div class="carousel" data-carousel="">
+    <div class="carousel services-carousel" data-carousel="">
         <button class="carousel-button prev" data-carousel-button="prev"></button>
         <button class="carousel-button next" data-carousel-button="next"></button>
         <div class="slides" data-slides="">

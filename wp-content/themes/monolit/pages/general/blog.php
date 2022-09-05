@@ -19,12 +19,9 @@ if (empty($posts)) {
     <?php titleHtml($title); ?>
 
     <div class="blog_container">
-        <?php
-        foreach ($posts as $post):
+        <?php foreach ($posts as $post):
             get_template_part_var('pages/parts/blog-card', ['post' => $post]);
-        endforeach;
-        ?>
-
+        endforeach; ?>
     </div>
 
     <a href="<?php echo $blogUrl ?: '/articles/'; ?>" class="blog_button">
