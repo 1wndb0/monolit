@@ -3,6 +3,7 @@
 add_action('wp_enqueue_scripts', 'register_scripts');
 add_action('after_setup_theme', 'theme_setup_settings');
 add_action('admin_menu', 'remove_default_post_types');
+add_action('wpforms_process_complete', 'wpf_dev_process_complete', 10, 4);
 
 add_filter('upload_mimes', 'upload_allow_types');
 add_filter('show_admin_bar', '__return_false');
@@ -71,4 +72,20 @@ function remove_default_post_types()
 {
     remove_menu_page('edit.php');
     remove_menu_page('edit-comments.php');
+}
+
+function wpf_dev_process_complete($params, $entry, $form_data, $entry_id)
+{
+    $formName = $form_data['settings']['form_title'];
+    $fields = [];
+
+    foreach ($params as $param) {
+        if (!$param['value']) {
+            continue;
+        }
+
+        $fields[$param['name']] = $param['value'];
+    }
+
+    sendMessageToTelegram($formName, $fields);
 }

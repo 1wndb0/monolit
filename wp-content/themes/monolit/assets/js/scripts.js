@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (nextSliderArrow) {
                 setInterval(() => {
                     nextSliderArrow.click()
-                }, 7000);
+                }, 3000);
             }
 
             btns.forEach(button => {

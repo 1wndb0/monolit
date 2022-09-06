@@ -93,6 +93,51 @@ function getImageUrl($post): string
     return get_the_post_thumbnail_url($post) ?: $defaultImage;
 }
 
+function sendMessageToTelegram($name = '', $fields = '')
+{
+    $apiToken = get_field('telegram_token', 'options') ?: false;
+
+    if (!$apiToken) {
+        return;
+    }
+
+    $text = "$name.\n";
+
+    foreach ($fields as $key => $value) {
+        $text .= "$key: $value\n";
+    }
+
+    $chatID = getTelegramChatId($apiToken);
+
+    $data = [
+        'chat_id' => $chatID,
+        'text'    => $text,
+    ];
+
+    file_get_contents("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data));
+}
+
+function getTelegramChatId($token = '')
+{
+    if (!$token) {
+        return false;
+    }
+
+    $chatId = get_option('telegram_bot_id');
+
+    if ($chatId) {
+        return $chatId;
+    }
+
+    $getJson = file_get_contents("https://api.telegram.org/bot$token/getUpdates");
+    $getArray = json_decode($getJson, true);
+    $chatId = $getArray['result'][0]['message']['chat']['id'];
+
+    update_option('telegram_bot_id', $chatId);
+
+    return $chatId;
+}
+
 function breadcrumbs()
 {
     $text['home'] = __('Главная', 'monolit');

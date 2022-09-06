@@ -260,11 +260,11 @@ img {
 
 .gallery_section {
     background: #ebebeb;
-    padding: 50px 0;
+    padding: 50px 0 0;
     max-width: 1170px;
     width: 100%;
     height: 630px;
-    margin: 0 auto
+    margin: 0 auto 50px;
 }
 
 .slideGallery {
@@ -346,7 +346,14 @@ img {
     align-items: center
 }
 
-.slidePartners {
+.carousel_certif {
+    height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.slidePartners, .slideCertif {
     position: absolute;
     inset: 0;
     opacity: 0;
@@ -355,7 +362,7 @@ img {
     width: 100%
 }
 
-.slidePartners[data-active] {
+.slidePartners[data-active], .slideCertif[data-active] {
     opacity: 1;
     transition-delay: 0s
 }
@@ -365,12 +372,22 @@ img {
     top: 30%
 }
 
+.carousel-button.certif_prev_btn {
+    left: 0;
+    top: 45%
+}
+
 .carousel-button.partners_next_btn {
     right: 0;
     top: 30%
 }
 
-.partners_slide_position {
+.carousel-button.certif_next_btn {
+    right: 0;
+    top: 45%
+}
+
+.partners_slide_position, .certif_slide_position {
     position: relative;
     display: flex;
     justify-content: center;
@@ -384,12 +401,19 @@ img {
     margin: 0 67px
 }
 
-.partners_slide_position img {
+.certif_slide_position div {
+    text-decoration: none;
+    height: 300px;
+    width: 255px;
+    margin: 0 67px
+}
+
+.partners_slide_position img, .certif_slide_position img {
     object-fit: cover;
     object-position: center
 }
 
-.prev_slide-partners {
+.prev_slide-partners, .prev_slide-certif {
     width: 100%;
     font-family: Roboto;
     font-style: normal;
@@ -401,7 +425,7 @@ img {
     transition: .4s
 }
 
-.next_slide-partners {
+.next_slide-partners, .next_slide-certif {
     width: 100%;
     font-family: Roboto;
     font-style: normal;
@@ -1018,6 +1042,10 @@ img {
     max-height: 500px
 }
 
+.main + .title_container {
+    margin-top: 30px;
+}
+
 .main_screen_title {
     font-family: Roboto;
     font-style: normal;
@@ -1607,7 +1635,7 @@ img {
     margin-right: auto
 }
 
-.title_container.ask {
+.asking .title_container {
     margin-bottom: 40px
 }
 
@@ -1849,7 +1877,6 @@ img {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url(https://monolit.company/static/img/main_screen_background.png);
     padding-top: 120px;
     padding-bottom: 160px
 }
@@ -1895,6 +1922,12 @@ img {
     flex-direction: column
 }
 
+@media (min-width: 941px) {
+    .block_about_left {
+        margin-right: 30px;
+    }
+}
+
 .block_about_history {
     margin: 0;
     max-width: 245px;
@@ -1922,7 +1955,7 @@ img {
     font-size: 36px;
     line-height: 42px;
     color: #000;
-    margin: 0
+    margin: 0 0 50px;
 }
 
 .block_about_right {
@@ -1959,17 +1992,22 @@ img {
 }
 
 .block_about_photo_container {
-    max-width: 770px;
+    max-width: 100%;
     width: 100%;
-    height: 400px;
-    position: absolute;
-    bottom: -355px;
-    left: 50%;
-    transform: translate(-50%)
+}
+
+@media (max-width: 940px) {
+    .block_about_photo_container {
+        margin-bottom: 30px;
+    }
+}
+
+.block_about_photo_container img {
+    object-fit: contain;
 }
 
 .our_values {
-    padding-top: 300px;
+    padding-top: 100px;
     max-width: 1170px;
     width: 100%;
     margin: 0 auto
@@ -2099,7 +2137,7 @@ img {
     padding: 100px 0
 }
 
-.title_container.partners .title_line {
+.our_mission .title_line, .title_container.certif .title_line {
     max-width: 420px;
     width: 100%
 }
@@ -2135,13 +2173,13 @@ img {
     margin-bottom: 60px
 }
 
-.our_partners {
+.our_partners, .our_certif {
     padding: 50px 0;
     margin-bottom: 50px;
     background: #ebebeb
 }
 
-.our_partners_title {
+.our_partners_title, .our_certif_title {
     max-width: 1170px;
     width: 100%;
     margin: 0 auto;
@@ -2155,14 +2193,14 @@ img {
     text-align: center
 }
 
-.our_partners_item {
+.our_partners_item, .our_certif_item {
     display: flex;
     flex-direction: column;
     margin-left: 20px;
     margin-right: 20px
 }
 
-.our_partners_item_content {
+.our_partners_item_content, .our_certif_item_content {
     width: 33.3%;
     height: 91px;
     padding-left: 67.5px;
@@ -2172,6 +2210,12 @@ img {
 .our_partners_item_img_container {
     width: 100%;
     height: 91px;
+    background-color: #fff
+}
+
+.our_certif_item_img_container {
+    width: 100%;
+    height: 300px;
     background-color: #fff
 }
 
@@ -2723,6 +2767,10 @@ img {
     margin-bottom: 30px
 }
 
+.article_content * {
+    text-align: justify;
+}
+
 .article_content h1 {
     margin: 0;
     font-family: Roboto;
@@ -2776,7 +2824,8 @@ img {
     font-weight: 300;
     font-size: 18px;
     line-height: 26px;
-    color: #000
+    color: #000;
+    text-align: justify;
 }
 
 .article_content table {
@@ -3225,7 +3274,7 @@ tr {
         transition: .4s
     }
 
-    .title_container.partners .title_line {
+    .our_mission .title_line {
         max-width: 300px
     }
 }
@@ -3241,6 +3290,7 @@ tr {
     .footer .container,
     .header,
     .our_partners,
+    .our_certif,
     .services {
         padding-left: 30px;
         padding-right: 30px
@@ -3366,6 +3416,7 @@ tr {
     .breadcrumb,
     .contacts_content,
     .our_partners,
+    .our_certif,
     .our_services_item_container,
     .our_values_second,
     .photo_galery_main,
@@ -3720,7 +3771,7 @@ tr {
         margin-bottom: 52px
     }
 
-    .our_partners_item_content {
+    .our_partners_item_content, .our_certif_item_content {
         padding-left: 40px;
         padding-right: 40px
     }
@@ -3818,7 +3869,6 @@ tr {
         transform: translate(0);
         margin-left: auto;
         margin-right: auto;
-        height: 300px
     }
 
     .about_us_title {
@@ -3879,7 +3929,7 @@ tr {
         margin-right: 30px
     }
 
-    .title_container.partners .title_line {
+    .title_container.certif .title_line {
         max-width: 150px
     }
 
@@ -3898,7 +3948,7 @@ tr {
         width: 728px
     }
 
-    .our_partners_item_content {
+    .our_partners_item_content, .our_certif_item_content {
         padding-left: 10px;
         padding-right: 10px
     }
@@ -4023,7 +4073,7 @@ tr {
     }
 
     .header_tel svg {
-        display: block
+        display: block !important;
     }
 
     .header_tel span {
@@ -4197,7 +4247,7 @@ tr {
         padding-right: 20px
     }
 
-    .title_container.partners .title_line {
+    .our_mission .title_line, .title_container.certif .title_line {
         max-width: 70px
     }
 
@@ -4230,6 +4280,7 @@ tr {
     .footer .container,
     .header,
     .our_partners,
+    .our_certif,
     .services {
         padding-left: 16px;
         padding-right: 16px
@@ -4243,7 +4294,8 @@ tr {
         width: 101vw
     }
 
-    .title_container.partners .title_line,
+    .our_mission .title_line,
+    .title_container.certif .title_line,
     .title_line {
         width: 32px
     }
@@ -4346,7 +4398,7 @@ tr {
         max-width: 600px
     }
 
-    .our_partners + .asking {
+    .our_partners + .asking, .our_certif + .asking {
         padding-top: 50px
     }
 
@@ -4407,10 +4459,6 @@ tr {
     .block_about_info {
         font-size: 18px;
         line-height: 26px
-    }
-
-    .block_about_photo_container {
-        height: 280px
     }
 
     .our_values_title {
@@ -4496,20 +4544,20 @@ tr {
         padding-right: 0
     }
 
-    .our_partners {
+    .our_partners, .our_certif {
         padding: 30px 20px;
         margin-bottom: 0
     }
 
-    .our_partners_title {
+    .our_partners_title, .our_certif_title {
         text-align: center
     }
 
-    .our_partners_item_content {
+    .our_partners_item_content, .our_certif_item_content {
         width: 100%
     }
 
-    .our_partners_item {
+    .our_partners_item, .our_certif_item {
         margin-left: 0;
         margin-right: 0
     }
@@ -4726,18 +4774,6 @@ tr {
 
     .photo_galery_item img {
         max-height: 200px
-    }
-
-    .block_about_photo_container {
-        height: 200px
-    }
-
-    .footer_menu {
-        width: 46%
-    }
-
-    .footer_menu {
-        margin-left: 0
     }
 
     .our_services_title {
