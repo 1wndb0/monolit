@@ -94,7 +94,7 @@ class WPForms_Field_Select extends WPForms_Field {
 		$choices  = $field['choices'];
 		$dynamic  = wpforms_get_field_dynamic_choices( $field, $form_id, $form_data );
 
-		if ( $dynamic ) {
+		if ( $dynamic !== false ) {
 			$choices              = $dynamic;
 			$field['show_values'] = true;
 		}
@@ -224,13 +224,13 @@ class WPForms_Field_Select extends WPForms_Field {
 		// or if manually enabled by a filter.
 		if ( ! empty( $field['show_values'] ) || wpforms_show_fields_options_setting() ) {
 			$show_values = $this->field_element(
-				'checkbox',
+				'toggle',
 				$field,
 				array(
 					'slug'    => 'show_values',
 					'value'   => isset( $field['show_values'] ) ? $field['show_values'] : '0',
 					'desc'    => esc_html__( 'Show Values', 'wpforms-lite' ),
-					'tooltip' => esc_html__( 'Check this to manually set form field values.', 'wpforms-lite' ),
+					'tooltip' => esc_html__( 'Check this option to manually set form field values.', 'wpforms-lite' ),
 				),
 				false
 			);
@@ -246,7 +246,7 @@ class WPForms_Field_Select extends WPForms_Field {
 
 		// Multiple options selection.
 		$fld = $this->field_element(
-			'checkbox',
+			'toggle',
 			$field,
 			array(
 				'slug'    => 'multiple',
@@ -255,7 +255,7 @@ class WPForms_Field_Select extends WPForms_Field {
 				'tooltip' => esc_html__( 'Allow users to select multiple choices in this field.', 'wpforms-lite' ) . '<br>' .
 							sprintf(
 								wp_kses( /* translators: %s - URL to WPForms.com doc article. */
-									esc_html__( 'For details, including how this looks and works for your site\'s visitors, please check out <a href="%s" target="_blank" rel="noopener noreferrer">our doc</a>. ', 'wpforms-lite' ),
+									esc_html__( 'For details, including how this looks and works for your site\'s visitors, please check out <a href="%s" target="_blank" rel="noopener noreferrer">our doc</a>.', 'wpforms-lite' ),
 									[
 										'a' => [
 											'href'   => [],
@@ -320,25 +320,25 @@ class WPForms_Field_Select extends WPForms_Field {
 		// Placeholder.
 		$this->field_option( 'placeholder', $field );
 
-		// Hide label.
-		$this->field_option( 'label_hide', $field );
-
-		// Custom CSS classes.
-		$this->field_option( 'css', $field );
-
 		// Dynamic choice auto-populating toggle.
 		$this->field_option( 'dynamic_choices', $field );
 
 		// Dynamic choice source.
 		$this->field_option( 'dynamic_choices_source', $field );
 
+		// Custom CSS classes.
+		$this->field_option( 'css', $field );
+
+		// Hide label.
+		$this->field_option( 'label_hide', $field );
+
 		// Options close markup.
 		$this->field_option(
 			'advanced-options',
 			$field,
-			array(
+			[
 				'markup' => 'close',
-			)
+			]
 		);
 	}
 
@@ -393,6 +393,10 @@ class WPForms_Field_Select extends WPForms_Field {
 		$is_multiple       = ! empty( $field['multiple'] );
 		$is_modern         = ! empty( $field['style'] ) && self::STYLE_MODERN === $field['style'];
 		$choices           = $field['properties']['inputs'];
+
+		if ( ! $choices ) {
+			return;
+		}
 
 		if ( ! empty( $field['required'] ) ) {
 			$container['attr']['required'] = 'required';
@@ -511,7 +515,7 @@ class WPForms_Field_Select extends WPForms_Field {
 				$post = get_post( $id );
 
 				if ( ! is_wp_error( $post ) && ! empty( $post ) && $data['dynamic_post_type'] === $post->post_type ) {
-					$posts[] = esc_html( $post->post_title );
+					$posts[] = esc_html( wpforms_get_post_title( $post ) );
 				}
 			}
 
@@ -531,7 +535,7 @@ class WPForms_Field_Select extends WPForms_Field {
 				$term = get_term( $id, $field['dynamic_taxonomy'] );
 
 				if ( ! is_wp_error( $term ) && ! empty( $term ) ) {
-					$terms[] = esc_html( $term->name );
+					$terms[] = esc_html( wpforms_get_term_name( $term ) );
 				}
 			}
 
@@ -543,12 +547,13 @@ class WPForms_Field_Select extends WPForms_Field {
 
 			// If show_values is true, that means values posted are the raw values
 			// and not the labels. So we need to get the label values.
-			if ( ! empty( $field['show_values'] ) && '1' == $field['show_values'] ) {
+			if ( ! empty( $field['show_values'] ) && (int) $field['show_values'] === 1 ) {
 
 				foreach ( $field_submit as $item ) {
 					foreach ( $field['choices'] as $choice ) {
 						if ( $item === $choice['value'] ) {
 							$value[] = $choice['label'];
+
 							break;
 						}
 					}

@@ -17,9 +17,7 @@ $services = getServices();
                     <div class="service_item">
                         <a href="<?php echo get_page_link($service); ?>" class="service_body">
                             <div class="service_img">
-                                <?php if (has_post_thumbnail($service)): ?>
-                                    <img src="<?php echo get_the_post_thumbnail_url($service); ?>" alt="<?php echo $service->post_title; ?>">
-                                <?php endif; ?>
+                               <?php echo getThumbnail($service->ID); ?>
                             </div>
                             <h4 class="service_title">
                                 <?php echo $service->post_title; ?>

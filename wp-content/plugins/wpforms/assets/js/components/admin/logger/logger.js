@@ -19,7 +19,12 @@ var WPFormsLogger = window.WPFormsLogger || ( function( document, window, $ ) {
 		 */
 		init: function() {
 
-			app.bindPopup();
+			$( app.ready );
+		},
+
+		ready: function() {
+
+			$( app.bindPopup() );
 		},
 
 		/**
@@ -29,7 +34,7 @@ var WPFormsLogger = window.WPFormsLogger || ( function( document, window, $ ) {
 		 */
 		bindPopup: function() {
 
-			$( '.wp-list-table.logs' ).on( 'click', '.js-single-log-target', function( e ) {
+			$( '.wpforms-list-table--logs .wp-list-table' ).on( 'click', '.js-single-log-target', function( e ) {
 
 				e.preventDefault();
 
@@ -54,7 +59,7 @@ var WPFormsLogger = window.WPFormsLogger || ( function( document, window, $ ) {
 
 			$.dialog( {
 				title: false,
-				boxWidth: Math.min( 550, $( window ).width() ),
+				boxWidth: Math.min( 1200, $( window ).width() * 0.8 ),
 				content: function() {
 
 					var self = this;
@@ -84,6 +89,7 @@ var WPFormsLogger = window.WPFormsLogger || ( function( document, window, $ ) {
 				},
 				animation: 'scale',
 				columnClass: 'medium',
+				closeIcon: true,
 				closeAnimation: 'scale',
 				backgroundDismiss: true,
 			} );

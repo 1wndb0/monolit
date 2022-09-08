@@ -13,9 +13,7 @@ if (empty($services)) {
         <div class="slides" data-slides="">
             <?php foreach ($services as $index => $service): ?>
                 <div class="slide" <?php echo $index == 0 ? 'data-active="true"' : ''; ?>>
-                    <?php if (has_post_thumbnail($service)): ?>
-                        <img src="<?php echo get_the_post_thumbnail_url($service); ?>" alt="<?php echo $service->post_title; ?>">
-                    <?php endif; ?>
+                    <?php echo getThumbnail($service->ID); ?>
                     <div class="slide_container">
                         <div class="main_screen_title">
                             <?php echo $service->post_title; ?>

@@ -12,6 +12,58 @@
 class_alias( 'WPForms\Helpers\PluginSilentUpgraderSkin', 'WPForms_Install_Silent_Skin' );
 
 /**
+ * Legacy `WPForms_Addons` class was refactored and moved to the new `WPForms\Pro\Admin\Pages\Addons` class.
+ * This alias is a safeguard to those developers who use our internal class WPForms_Addons,
+ * which we deleted.
+ *
+ * @since 1.6.7
+ */
+class_alias( wpforms()->is_pro() ? 'WPForms\Pro\Admin\Pages\Addons' : 'WPForms\Lite\Admin\Pages\Addons', 'WPForms_Addons' );
+
+/**
+ * This alias is a safeguard to those developers who decided to use our internal class WPForms_Smart_Tags,
+ * which we deleted.
+ *
+ * @since 1.6.7
+ */
+class_alias( wpforms()->is_pro() ? 'WPForms\Pro\SmartTags\SmartTags' : 'WPForms\SmartTags\SmartTags', 'WPForms_Smart_Tags' );
+
+/**
+ * This alias is a safeguard to those developers who decided to use our internal class \WPForms\Providers\Loader,
+ * which we deleted.
+ *
+ * @since 1.7.3
+ */
+class_alias( '\WPForms\Providers\Providers', '\WPForms\Providers\Loader' );
+
+/**
+ * Legacy `\WPForms\Admin\Notifications` class was refactored and moved to the new `\WPForms\Admin\Notifications\Notifications` class.
+ * This alias is a safeguard to those developers who use our internal class \WPForms\Admin\Notifications,
+ * which we deleted.
+ *
+ * @since 1.7.5
+ */
+class_alias( '\WPForms\Admin\Notifications\Notifications', '\WPForms\Admin\Notifications' );
+
+/**
+ * Legacy `\WPForms\Migrations` class was refactored and moved to the new `\WPForms\Migrations\Migrations` class.
+ * This alias is a safeguard to those developers who use our internal class \WPForms\Migrations, which we deleted.
+ *
+ * @since 1.7.5
+ */
+class_alias( '\WPForms\Migrations\Migrations', '\WPForms\Migrations' );
+
+if ( wpforms()->is_pro() ) {
+	/**
+	 * Legacy `\WPForms\Pro\Migrations` class was refactored and moved to the new `\WPForms\Pro\Migrations\Migrations` class.
+	 * This alias is a safeguard to those developers who use our internal class \WPForms\Migrations, which we deleted.
+	 *
+	 * @since 1.7.5
+	 */
+	class_alias( '\WPForms\Pro\Migrations\Migrations', '\WPForms\Pro\Migrations' );
+}
+
+/**
  * Get notification state, whether it's opened or closed.
  *
  * @deprecated 1.4.8
@@ -25,7 +77,7 @@ class_alias( 'WPForms\Helpers\PluginSilentUpgraderSkin', 'WPForms_Install_Silent
  */
 function wpforms_builder_notification_get_state( $form_id, $notification_id ) {
 
-	_deprecated_function( __FUNCTION__, '1.4.8 of the WPForms plugin', 'wpforms_builder_settings_block_get_state()' );
+	_deprecated_function( __FUNCTION__, '1.4.8 of the WPForms addon', 'wpforms_builder_settings_block_get_state()' );
 
 	return wpforms_builder_settings_block_get_state( $form_id, $notification_id, 'notification' );
 }

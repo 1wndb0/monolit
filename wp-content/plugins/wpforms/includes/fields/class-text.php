@@ -141,33 +141,64 @@ class WPForms_Field_Text extends WPForms_Field {
 	public function field_properties( $properties, $field, $form_data ) {
 
 		// Input primary: Detect custom input mask.
-		if ( ! empty( $field['input_mask'] ) ) {
+		if ( empty( $field['input_mask'] ) ) {
+			return $properties;
+		}
 
-			// Add class that will trigger custom mask.
-			$properties['inputs']['primary']['class'][] = 'wpforms-masked-input';
+		// Add class that will trigger custom mask.
+		$properties['inputs']['primary']['class'][] = 'wpforms-masked-input';
 
-			if ( wpforms_is_amp() ) {
-				list( $amp_mask, $placeholder ) = $this->convert_mask_to_amp_inputmask( $field['input_mask'] );
+		if ( wpforms_is_amp() ) {
+			return $this->get_amp_input_mask_properties( $properties, $field );
+		}
 
-				$properties['inputs']['primary']['attr']['mask'] = $amp_mask;
-				if ( empty( $properties['inputs']['primary']['attr']['placeholder'] ) ) {
-					$properties['inputs']['primary']['attr']['placeholder'] = $placeholder;
-				}
-			} elseif ( false !== strpos( $field['input_mask'], 'alias:' ) ) {
-				$mask = str_replace( 'alias:', '', $field['input_mask'] );
-				$properties['inputs']['primary']['data']['inputmask-alias'] = $mask;
-			} elseif ( false !== strpos( $field['input_mask'], 'regex:' ) ) {
-				$mask = str_replace( 'regex:', '', $field['input_mask'] );
-				$properties['inputs']['primary']['data']['inputmask-regex'] = $mask;
-			} elseif ( false !== strpos( $field['input_mask'], 'date:' ) ) {
-				$mask = str_replace( 'date:', '', $field['input_mask'] );
-				$properties['inputs']['primary']['data']['inputmask-alias']       = 'datetime';
-				$properties['inputs']['primary']['data']['inputmask-inputformat'] = $mask;
+		$properties['inputs']['primary']['data']['rule-inputmask-incomplete'] = true;
 
-			} else {
-				$properties['inputs']['primary']['data']['inputmask-mask']    = $field['input_mask'];
-				$properties['inputs']['primary']['data']['rule-empty-blanks'] = true;
-			}
+		if ( strpos( $field['input_mask'], 'alias:' ) !== false ) {
+			$mask = str_replace( 'alias:', '', $field['input_mask'] );
+			$properties['inputs']['primary']['data']['inputmask-alias'] = $mask;
+
+			return $properties;
+		}
+
+		if ( strpos( $field['input_mask'], 'regex:' ) !== false ) {
+			$mask = str_replace( 'regex:', '', $field['input_mask'] );
+			$properties['inputs']['primary']['data']['inputmask-regex'] = $mask;
+
+			return $properties;
+		}
+
+		if ( strpos( $field['input_mask'], 'date:' ) !== false ) {
+			$mask = str_replace( 'date:', '', $field['input_mask'] );
+			$properties['inputs']['primary']['data']['inputmask-alias']       = 'datetime';
+			$properties['inputs']['primary']['data']['inputmask-inputformat'] = $mask;
+
+			return $properties;
+		}
+
+		$properties['inputs']['primary']['data']['inputmask-mask'] = $field['input_mask'];
+
+		return $properties;
+	}
+
+	/**
+	 * Define additional field properties for the inputmask on AMP pages.
+	 *
+	 * @since 1.7.6
+	 *
+	 * @param array $properties Field properties.
+	 * @param array $field      Field settings.
+	 *
+	 * @return array
+	 */
+	private function get_amp_input_mask_properties( $properties, $field ) {
+
+		list( $amp_mask, $placeholder ) = $this->convert_mask_to_amp_inputmask( $field['input_mask'] );
+
+		$properties['inputs']['primary']['attr']['mask'] = $amp_mask;
+
+		if ( empty( $properties['inputs']['primary']['attr']['placeholder'] ) ) {
+			$properties['inputs']['primary']['attr']['placeholder'] = $placeholder;
 		}
 
 		return $properties;
@@ -231,105 +262,109 @@ class WPForms_Field_Text extends WPForms_Field {
 		// Placeholder.
 		$this->field_option( 'placeholder', $field );
 
-		// Hide label.
-		$this->field_option( 'label_hide', $field );
-
 		// Limit length.
-		$args = array(
+		$args = [
 			'slug'    => 'limit_enabled',
 			'content' => $this->field_element(
-				'checkbox',
+				'toggle',
 				$field,
-				array(
+				[
 					'slug'    => 'limit_enabled',
 					'value'   => isset( $field['limit_enabled'] ),
 					'desc'    => esc_html__( 'Limit Length', 'wpforms-lite' ),
 					'tooltip' => esc_html__( 'Check this option to limit text length by characters or words count.', 'wpforms-lite' ),
-				),
+				],
 				false
 			),
-		);
+		];
+
 		$this->field_element( 'row', $field, $args );
 
 		$count = $this->field_element(
 			'text',
 			$field,
-			array(
+			[
 				'type'  => 'number',
 				'slug'  => 'limit_count',
-				'attrs' => array(
+				'attrs' => [
 					'min'     => 1,
 					'step'    => 1,
 					'pattern' => '[0-9]',
-				),
+				],
 				'value' => ! empty( $field['limit_count'] ) ? absint( $field['limit_count'] ) : 1,
-			),
+			],
 			false
 		);
 
 		$mode = $this->field_element(
 			'select',
 			$field,
-			array(
+			[
 				'slug'    => 'limit_mode',
 				'value'   => ! empty( $field['limit_mode'] ) ? esc_attr( $field['limit_mode'] ) : 'characters',
-				'options' => array(
+				'options' => [
 					'characters' => esc_html__( 'Characters', 'wpforms-lite' ),
 					'words'      => esc_html__( 'Words', 'wpforms-lite' ),
-				),
-			),
+				],
+			],
 			false
 		);
-		$args = array(
+
+		$args = [
 			'slug'    => 'limit_controls',
 			'class'   => ! isset( $field['limit_enabled'] ) ? 'wpforms-hide' : '',
 			'content' => $count . $mode,
-		);
+		];
+
 		$this->field_element( 'row', $field, $args );
 
 		// Default value.
 		$this->field_option( 'default_value', $field );
 
-		// Custom CSS classes.
-		$this->field_option( 'css', $field );
-
 		// Input Mask.
 		$lbl = $this->field_element(
 			'label',
 			$field,
-			array(
+			[
 				'slug'          => 'input_mask',
 				'value'         => esc_html__( 'Input Mask', 'wpforms-lite' ),
 				'tooltip'       => esc_html__( 'Enter your custom input mask.', 'wpforms-lite' ),
 				'after_tooltip' => '<a href="https://wpforms.com/how-to-use-custom-input-masks/" class="after-label-description" target="_blank" rel="noopener noreferrer">' . esc_html__( 'See Examples & Docs', 'wpforms-lite' ) . '</a>',
-			),
+			],
 			false
 		);
 		$fld = $this->field_element(
 			'text',
 			$field,
-			array(
+			[
 				'slug'  => 'input_mask',
 				'value' => ! empty( $field['input_mask'] ) ? esc_attr( $field['input_mask'] ) : '',
-			),
+			],
 			false
 		);
+
 		$this->field_element(
 			'row',
 			$field,
-			array(
+			[
 				'slug'    => 'input_mask',
 				'content' => $lbl . $fld,
-			)
+			]
 		);
+
+		// Custom CSS classes.
+		$this->field_option( 'css', $field );
+
+		// Hide label.
+		$this->field_option( 'label_hide', $field );
 
 		// Options close markup.
 		$this->field_option(
 			'advanced-options',
 			$field,
-			array(
+			[
 				'markup' => 'close',
-			)
+			]
 		);
 	}
 
@@ -343,13 +378,14 @@ class WPForms_Field_Text extends WPForms_Field {
 	public function field_preview( $field ) {
 
 		// Define data.
-		$placeholder = ! empty( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : '';
+		$placeholder   = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
+		$default_value = ! empty( $field['default_value'] ) ? $field['default_value'] : '';
 
 		// Label.
 		$this->field_preview_option( 'label', $field );
 
 		// Primary input.
-		echo '<input type="text" placeholder="' . esc_attr( $placeholder ) . '" class="primary-input" disabled>';
+		echo '<input type="text" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $default_value ) . '" class="primary-input" readonly>';
 
 		// Description.
 		$this->field_preview_option( 'description', $field );

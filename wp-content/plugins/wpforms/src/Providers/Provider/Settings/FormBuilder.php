@@ -312,16 +312,19 @@ abstract class FormBuilder implements FormBuilderInterface {
 		}
 
 		$form_id = (int) $_POST['id'];
-		$task    = \sanitize_key( $_POST['task'] );
-		$data    = null;
+		$task    = sanitize_key( $_POST['task'] );
 
-		// Setup form data based on the ID, that we got from AJAX request.
-		$this->form_data = \wpforms()->form->get(
-			$form_id,
-			array(
-				'content_only' => true,
-			)
-		);
+		$revisions = wpforms()->get( 'revisions' );
+		$revision  = $revisions ? $revisions->get_revision() : null;
+
+		if ( $revision ) {
+			// Setup form data based on the revision_id, that we got from AJAX request.
+			$this->form_data = wpforms_decode( $revision->post_content );
+		} else {
+			// Setup form data based on the ID, that we got from AJAX request.
+			$form_handler    = wpforms()->get( 'form' );
+			$this->form_data = $form_handler ? $form_handler->get( $form_id, [ 'content_only' => true ] ) : [];
+		}
 
 		// Do not allow to proceed further, as form_id may be incorrect.
 		if ( empty( $this->form_data ) ) {
@@ -390,7 +393,19 @@ abstract class FormBuilder implements FormBuilderInterface {
 		<div class="wpforms-panel-content-section wpforms-builder-provider wpforms-panel-content-section-<?php echo \esc_attr( $this->core->slug ); ?>" id="<?php echo \esc_attr( $this->core->slug ); ?>-provider" data-provider="<?php echo \esc_attr( $this->core->slug ); ?>">
 
 			<!-- Provider content goes here. -->
-			<?php $this->display_content_header(); ?>
+			<?php
+
+			$this->display_content_header();
+
+			$form_id = ! empty( $this->form_data['id'] ) ? $this->form_data['id'] : '';
+
+			self::display_content_default_screen(
+				Status::init( $this->core->slug )->is_connected( $form_id ),
+				$this->core->slug,
+				$this->core->name,
+				$this->core->icon
+			);
+			?>
 
 			<div class="wpforms-builder-provider-body">
 				<div class="wpforms-provider-connections-wrap wpforms-clear">
@@ -404,6 +419,45 @@ abstract class FormBuilder implements FormBuilderInterface {
 	}
 
 	/**
+	 * Display provider default screen.
+	 *
+	 * @since 1.6.8
+	 *
+	 * @param bool   $is_connected True if connections are configured.
+	 * @param string $slug         Provider slug.
+	 * @param string $name         Provider name.
+	 * @param string $icon         Provider icon.
+	 */
+	public static function display_content_default_screen( $is_connected, $slug, $name, $icon ) {
+
+		// Hide provider default settings screen when it's already connected.
+		$class = $is_connected ? ' wpforms-hidden' : '';
+		?>
+		<div class="wpforms-builder-provider-connections-default<?php echo esc_attr( $class ); ?>">
+			<img src="<?php echo esc_url( $icon ); ?>">
+			<div class="wpforms-builder-provider-settings-default-content">
+				<?php
+				/*
+				 * Allows developers to change the default content of the provider's settings default screen.
+				 *
+				 * @since 1.6.8
+				 *
+				 * @param string $content Content of the provider's settings default screen.
+				 */
+				echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					"wpforms_providers_provider_settings_formbuilder_display_content_default_screen_{$slug}",
+					sprintf( /* translators: %s - Provider name. */
+						'<p>' . esc_html__( 'Get the most out of WPForms &mdash; use it with an active %s account.', 'wpforms-lite' ) . '</p>',
+						esc_html( $name )
+					)
+				);
+				?>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Section content header.
 	 *
 	 * @since 1.4.7
@@ -413,12 +467,12 @@ abstract class FormBuilder implements FormBuilderInterface {
 		$is_configured = Status::init( $this->core->slug )->is_configured();
 		?>
 
-		<div class="wpforms-builder-provider-title">
+		<div class="wpforms-builder-provider-title wpforms-panel-content-section-title">
 
 			<?php echo \esc_html( $this->core->name ); ?>
 
 			<span class="wpforms-builder-provider-title-spinner">
-				<i class="fa fa-refresh fa-spin"></i>
+				<i class="wpforms-loading-spinner wpforms-loading-md wpforms-loading-inline"></i>
 			</span>
 
 			<button class="wpforms-builder-provider-title-add js-wpforms-builder-provider-connection-add <?php echo $is_configured ? '' : 'hidden'; ?>"

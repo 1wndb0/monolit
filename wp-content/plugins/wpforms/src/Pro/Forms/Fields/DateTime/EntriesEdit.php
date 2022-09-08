@@ -28,27 +28,27 @@ class EntriesEdit extends \WPForms\Pro\Forms\Fields\Base\EntriesEdit {
 
 		wp_enqueue_style(
 			'wpforms-jquery-timepicker',
-			WPFORMS_PLUGIN_URL . 'assets/css/jquery.timepicker.css',
+			WPFORMS_PLUGIN_URL . 'assets/lib/jquery.timepicker/jquery.timepicker.min.css',
 			[],
 			'1.11.5'
 		);
 		wp_enqueue_style(
 			'wpforms-flatpickr',
-			WPFORMS_PLUGIN_URL . 'assets/css/flatpickr.min.css',
+			WPFORMS_PLUGIN_URL . 'assets/lib/flatpickr/flatpickr.min.css',
 			[],
-			'4.5.5'
+			'4.6.9'
 		);
 
 		wp_enqueue_script(
 			'wpforms-flatpickr',
-			WPFORMS_PLUGIN_URL . 'assets/js/flatpickr.min.js',
+			WPFORMS_PLUGIN_URL . 'assets/lib/flatpickr/flatpickr.min.js',
 			[ 'jquery' ],
-			'4.5.5',
+			'4.6.9',
 			true
 		);
 		wp_enqueue_script(
 			'wpforms-jquery-timepicker',
-			WPFORMS_PLUGIN_URL . 'assets/js/jquery.timepicker.min.js',
+			WPFORMS_PLUGIN_URL . 'assets/lib/jquery.timepicker/jquery.timepicker.min.js',
 			[ 'jquery' ],
 			'1.11.5',
 			true
@@ -86,8 +86,11 @@ class EntriesEdit extends \WPForms\Pro\Forms\Fields\Base\EntriesEdit {
 			}
 
 			// Generate input value according to the datetime format.
+			$formats = wpforms_date_formats();
+
 			$input_format        = ! empty( $field[ $input . '_format' ] ) ? $field[ $input . '_format' ] : 'm/d/Y';
-			$input_value         = ! empty( $entry_field['unix'] ) ? gmdate( $input_format, $entry_field['unix'] ) : $entry_field[ $input ];
+			$format              = isset( $formats[ $input_format ] ) ? $formats[ $input_format ] : 'm/d/Y';
+			$input_value         = ! empty( $entry_field['unix'] ) ? gmdate( $format, $entry_field['unix'] ) : $entry_field[ $input ];
 			$field['properties'] = $this->field_object->get_field_populated_single_property_value_public( $input_value, $input, $field['properties'], $field );
 		}
 

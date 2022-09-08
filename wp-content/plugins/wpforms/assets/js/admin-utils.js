@@ -1,4 +1,4 @@
-/* global wpforms_builder */
+/* global wpforms_builder, WPFormsUtils */
 
 ;
 var wpf = {
@@ -21,6 +21,9 @@ var wpf = {
 	init: function() {
 
 		wpf.bindUIActions();
+
+		// Init Radio Group for Checkboxes.
+		wpf.initRadioGroupForCheckboxes();
 
 		jQuery( wpf.ready );
 	},
@@ -48,21 +51,22 @@ var wpf = {
 	bindUIActions: function() {
 
 		// The following items should all trigger the fieldUpdate trigger.
-		jQuery(document).on('wpformsFieldAdd', wpf.setFieldOrders);
-		jQuery(document).on('wpformsFieldDelete', wpf.setFieldOrders);
-		jQuery(document).on('wpformsFieldMove', wpf.setFieldOrders);
-		jQuery(document).on('wpformsFieldAdd', wpf.setChoicesOrders);
-		jQuery(document).on('wpformsFieldChoiceAdd', wpf.setChoicesOrders);
-		jQuery(document).on('wpformsFieldChoiceDelete', wpf.setChoicesOrders);
-		jQuery(document).on('wpformsFieldChoiceMove', wpf.setChoicesOrders);
-		jQuery(document).on('wpformsFieldAdd', wpf.fieldUpdate);
-		jQuery(document).on('wpformsFieldDelete', wpf.fieldUpdate);
-		jQuery(document).on('wpformsFieldMove', wpf.fieldUpdate);
-		jQuery(document).on('focusout', '.wpforms-field-option-row-label input', wpf.fieldUpdate);
-		jQuery(document).on('wpformsFieldChoiceAdd', wpf.fieldUpdate);
-		jQuery(document).on('wpformsFieldChoiceDelete', wpf.fieldUpdate);
-		jQuery(document).on('wpformsFieldChoiceMove', wpf.fieldUpdate);
-		jQuery(document).on('focusout', '.wpforms-field-option-row-choices input.label', wpf.fieldUpdate);
+		jQuery( document ).on( 'wpformsFieldAdd', wpf.setFieldOrders );
+		jQuery( document ).on( 'wpformsFieldDelete', wpf.setFieldOrders );
+		jQuery( document ).on( 'wpformsFieldMove', wpf.setFieldOrders );
+		jQuery( document ).on( 'wpformsFieldAdd', wpf.setChoicesOrders );
+		jQuery( document ).on( 'wpformsFieldChoiceAdd', wpf.setChoicesOrders );
+		jQuery( document ).on( 'wpformsFieldChoiceDelete', wpf.setChoicesOrders );
+		jQuery( document ).on( 'wpformsFieldChoiceMove', wpf.setChoicesOrders );
+		jQuery( document ).on( 'wpformsFieldAdd', wpf.fieldUpdate );
+		jQuery( document ).on( 'wpformsFieldDelete', wpf.fieldUpdate );
+		jQuery( document ).on( 'wpformsFieldMove', wpf.fieldUpdate );
+		jQuery( document ).on( 'focusout', '.wpforms-field-option-row-label input', wpf.fieldUpdate );
+		jQuery( document ).on( 'wpformsFieldChoiceAdd', wpf.fieldUpdate );
+		jQuery( document ).on( 'wpformsFieldChoiceDelete', wpf.fieldUpdate );
+		jQuery( document ).on( 'wpformsFieldChoiceMove', wpf.fieldUpdate );
+		jQuery( document ).on( 'wpformsFieldDynamicChoiceToggle', wpf.fieldUpdate );
+		jQuery( document ).on( 'focusout', '.wpforms-field-option-row-choices input.label', wpf.fieldUpdate );
 	},
 
 	/**
@@ -118,6 +122,39 @@ var wpf = {
 	},
 
 	/**
+	 * Maintain multiselect dropdown with search.
+	 * If a multiple select has selected choices - hide a placeholder text.
+	 * In case if select is empty - we return placeholder text back.
+	 *
+	 * @since 1.7.6
+	 *
+	 * @param {object} self Current object.
+	 */
+	initMultipleSelectWithSearch: function( self ) {
+
+		const $element = jQuery( self.passedElement.element ),
+			$input   = jQuery( self.input.element );
+
+		if ( $element.prop( 'multiple' ) ) {
+
+			// On init event.
+			$input.data( 'placeholder', $input.attr( 'placeholder' ) );
+
+			if ( self.getValue( true ).length ) {
+				$input.removeAttr( 'placeholder' );
+			}
+
+			// On change event.
+			$element.on( 'change', function() {
+
+				self.getValue( true ).length ?
+					$input.removeAttr( 'placeholder' ) :
+					$input.attr( 'placeholder', $input.data( 'placeholder' ) );
+			} );
+		}
+	},
+
+	/**
 	 * Trigger fired for all field update related actions.
 	 *
 	 * @since 1.0.1
@@ -126,9 +163,9 @@ var wpf = {
 
 		var fields = wpf.getFields();
 
-		jQuery(document).trigger('wpformsFieldUpdate', [fields] );
+		jQuery( document ).trigger( 'wpformsFieldUpdate', [ fields ] );
 
-		wpf.debug('fieldUpdate triggered');
+		wpf.debug( 'fieldUpdate triggered' );
 	},
 
 	/**
@@ -155,9 +192,7 @@ var wpf = {
 			// Normal processing, get fields from builder and prime cache.
 			var formData       = wpf.formObject( '#wpforms-field-options' ),
 				fields         = formData.fields,
-				fieldOrder     = [],
-				fieldsOrdered  = [],
-				fieldBlacklist = [ 'html', 'pagebreak' ];
+				fieldBlacklist = [ 'entry-preview', 'html', 'pagebreak', 'internal-information' ];
 
 			if (!fields) {
 				return false;
@@ -208,22 +243,26 @@ var wpf = {
 	 * Toggle the loading state/indicator of a field option.
 	 *
 	 * @since 1.2.8
+	 *
+	 * @param {mixed}   option jQuery object, or DOM element selector.
+	 * @param {boolean} unload True if you need to unload spinner, and vice versa.
 	 */
-	fieldOptionLoading: function(option, unload) {
+	fieldOptionLoading: function( option, unload ) {
 
-		var $option = jQuery(option),
-			$label  = $option.find('label'),
-			unload  = (typeof unload === 'undefined') ? false : true,
-			spinner = '<i class="fa fa-spinner fa-spin wpforms-loading-inline"></i>';
+		var $option = jQuery( option ),
+			$label  = $option.find( 'label' ),
+			spinner = '<i class="wpforms-loading-spinner wpforms-loading-inline"></i>';
 
-		if (unload) {
-			$label.find('.wpforms-loading-inline').remove();
-			$label.find('.wpforms-help-tooltip').show();
-			$option.find('input,select,textarea').prop('disabled', false);
+		unload  = typeof unload !== 'undefined';
+
+		if ( unload ) {
+			$label.find( '.wpforms-loading-spinner' ).remove();
+			$label.find( '.wpforms-help-tooltip' ).show();
+			$option.find( 'input,select,textarea' ).prop( 'disabled', false );
 		} else {
-			$label.append(spinner);
-			$label.find('.wpforms-help-tooltip').hide();
-			$option.find('input,select,textarea').prop('disabled', true);
+			$label.append( spinner );
+			$label.find( '.wpforms-help-tooltip' ).hide();
+			$option.find( 'input,select,textarea' ).prop( 'disabled', true );
 		}
 	},
 
@@ -372,18 +411,18 @@ var wpf = {
 		// Convert to string and allow only numbers, dots and commas.
 		amount = String( amount ).replace( /[^0-9.,]/g, '' );
 
-		if ( wpforms_builder.currency_decimal === ',' && ( amount.indexOf( wpforms_builder.currency_decimal ) !== -1 ) ) {
+		if ( wpforms_builder.currency_decimal === ',' ) {
 			if ( wpforms_builder.currency_thousands === '.' && amount.indexOf( wpforms_builder.currency_thousands ) !== -1 ) {
-				amount = amount.replace( wpforms_builder.currency_thousands, '' );
+				amount = amount.replace( new RegExp( '\\' + wpforms_builder.currency_thousands, 'g' ), '' );
 			} else if ( wpforms_builder.currency_thousands === '' && amount.indexOf( '.' ) !== -1 ) {
-				amount = amount.replace( '.', '' );
+				amount = amount.replace( /\./g, '' );
 			}
 			amount = amount.replace( wpforms_builder.currency_decimal, '.' );
 		} else if ( wpforms_builder.currency_thousands === ',' && ( amount.indexOf( wpforms_builder.currency_thousands ) !== -1 ) ) {
-			amount = amount.replace( wpforms_builder.currency_thousands, '' );
+			amount = amount.replace( new RegExp( '\\' + wpforms_builder.currency_thousands, 'g' ), '' );
 		}
 
-		return wpf.numberFormat( amount, 2, '.', '' );
+		return wpf.numberFormat( amount, wpforms_builder.currency_decimals, '.', '' );
 	},
 
 	/**
@@ -403,19 +442,19 @@ var wpf = {
 		if ( wpforms_builder.currency_decimal === ',' && ( amount.indexOf( wpforms_builder.currency_decimal ) !== -1 ) ) {
 			var sepFound = amount.indexOf( wpforms_builder.currency_decimal );
 
-			amount = amount.substr( 0, sepFound ) + '.' + amount.substr( sepFound + 1, amount.strlen - 1 );
+			amount = amount.substr( 0, sepFound ) + '.' + amount.substr( sepFound + 1, amount.length - 1 );
 		}
 
 		// Strip , from the amount (if set as the thousands separator)
 		if ( wpforms_builder.currency_thousands === ',' && ( amount.indexOf( wpforms_builder.currency_thousands ) !== -1 ) ) {
-			amount = amount.replace( ',', '' );
+			amount = amount.replace( /,/g, '' );
 		}
 
 		if ( wpf.empty( amount ) ) {
 			amount = 0;
 		}
 
-		return wpf.numberFormat( amount, 2, wpforms_builder.currency_decimal, wpforms_builder.currency_thousands );
+		return wpf.numberFormat( amount, wpforms_builder.currency_decimals, wpforms_builder.currency_decimal, wpforms_builder.currency_thousands );
 	},
 
 	/**
@@ -629,12 +668,38 @@ var wpf = {
 	 */
 	initTooltips: function() {
 
+		if ( typeof jQuery.fn.tooltipster === 'undefined' ) {
+			return;
+		}
+
 		jQuery( '.wpforms-help-tooltip' ).tooltipster( {
 			contentAsHTML: true,
 			position: 'right',
 			maxWidth: 300,
 			multiple: true,
-			interactive: true
+			interactive: true,
+			debug: false,
+			IEmin: 11,
+		} );
+	},
+
+	/**
+	 * Restore WPForms admin area tooltip's title.
+	 *
+	 * @since 1.6.5
+	 *
+	 * @param {mixed} $scope Searching scope.
+	 */
+	restoreTooltips: function( $scope ) {
+
+		$scope = typeof $scope !== 'undefined' && $scope && $scope.length > 0 ? $scope.find( '.wpforms-help-tooltip' ) : jQuery( '.wpforms-help-tooltip' );
+		$scope.each( function() {
+			var $this = jQuery( this );
+			if ( jQuery.tooltipster.instances( this ).length !== 0 ) {
+
+				// Restoring title.
+				$this.attr( 'title', $this.tooltipster( 'content' ) );
+			}
 		} );
 	},
 
@@ -725,6 +790,82 @@ var wpf = {
 
 			return '&#' + i.charCodeAt( 0 ) + ';';
 		} );
+	},
+
+	/**
+	 * Radio Group for Checkboxes.
+	 *
+	 * @since 1.6.6
+	 */
+	initRadioGroupForCheckboxes: function() {
+
+		var $ = jQuery;
+
+		$( document ).on( 'change', 'input[type="checkbox"].wpforms-radio-group', function() {
+
+			var $input  = $( this ),
+				inputId = $input.attr( 'id' );
+
+			if ( ! $input.prop( 'checked' ) ) {
+				return;
+			}
+
+			var groupName = $input.data( 'radio-group' ),
+				$group    = $( '.wpforms-radio-group-' + groupName ),
+				$item;
+
+			$group.each( function() {
+
+				$item = $( this );
+				if ( $item.attr( 'id' ) !== inputId ) {
+					$item.prop( 'checked', false );
+				}
+			} );
+		} );
+	},
+
+	/**
+	 * Pluck a certain field out of each object in a list.
+	 *
+	 * JS implementation of the `wp_list_pluck()`.
+	 *
+	 * @since 1.6.8
+	 *
+	 * @param {Array}  arr    Array of objects.
+	 * @param {string} column Column.
+	 *
+	 * @returns {Array} Array with extracted column values.
+	 */
+	listPluck: function( arr, column ) {
+
+		return arr.map( function( x ) {
+
+			if ( typeof x !== 'undefined' ) {
+				return x[ column ];
+			}
+
+			return x;
+		} );
+	},
+
+	/**
+	 * Wrapper to trigger a native or custom event and return the event object.
+	 *
+	 * @since 1.7.5
+	 * @since 1.7.6 Deprecated.
+	 *
+	 * @deprecated Use `WPFormsUtils.triggerEvent` instead.
+	 *
+	 * @param {jQuery} $element  Element to trigger event on.
+	 * @param {string} eventName Event name to trigger (custom or native).
+	 *
+	 * @returns {Event} Event object.
+	 */
+	triggerEvent: function( $element, eventName ) {
+
+		console.warn( 'WARNING! Function "wpf.triggerEvent( $element, eventName )" has been deprecated, please use the new "WPFormsUtils.triggerEvent( $element, eventName, args )" function instead!' );
+
+		return WPFormsUtils.triggerEvent( $element, eventName );
 	},
 };
 

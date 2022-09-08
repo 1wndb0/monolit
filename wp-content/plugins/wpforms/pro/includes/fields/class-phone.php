@@ -12,7 +12,7 @@ class WPForms_Field_Phone extends WPForms_Field {
 	 *
 	 * @since 1.6.3
 	 */
-	const INTL_VERSION = '17.0.5';
+	const INTL_VERSION = '17.0.17';
 
 	/**
 	 * Primary class constructor.
@@ -55,20 +55,21 @@ class WPForms_Field_Phone extends WPForms_Field {
 	public function field_properties( $properties, $field, $form_data ) {
 
 		// Smart: add validation rule and class.
-		if ( 'smart' === $field['format'] ) {
+		if ( $field['format'] === 'smart' ) {
 			$properties['inputs']['primary']['class'][]                        = 'wpforms-smart-phone-field';
 			$properties['inputs']['primary']['data']['rule-smart-phone-field'] = 'true';
 		}
 
 		// US: add input mask and class.
-		if ( 'us' === $field['format'] ) {
+		if ( $field['format'] === 'us' ) {
 			$properties['inputs']['primary']['class'][]                     = 'wpforms-masked-input';
 			$properties['inputs']['primary']['data']['inputmask']           = "'mask': '(999) 999-9999'";
 			$properties['inputs']['primary']['data']['rule-us-phone-field'] = 'true';
+			$properties['inputs']['primary']['data']['inputmask-inputmode'] = 'tel';
 		}
 
 		// International: add validation rule and class.
-		if ( 'international' === $field['format'] ) {
+		if ( $field['format'] === 'international' ) {
 			$properties['inputs']['primary']['data']['rule-int-phone-field'] = 'true';
 		}
 
@@ -87,13 +88,14 @@ class WPForms_Field_Phone extends WPForms_Field {
 		if ( ! wpforms()->frontend->assets_global() && ! $this->has_smart_format( $forms ) ) {
 			return;
 		}
-		$min = \wpforms_get_min_suffix();
+
+		$min = wpforms_get_min_suffix();
 
 		// International Telephone Input library CSS.
 		wp_enqueue_style(
 			'wpforms-smart-phone-field',
-			WPFORMS_PLUGIN_URL . "pro/assets/css/vendor/intl-tel-input{$min}.css",
-			array(),
+			WPFORMS_PLUGIN_URL . "assets/pro/css/fields/phone/intl-tel-input{$min}.css",
+			[],
 			self::INTL_VERSION
 		);
 	}
@@ -115,8 +117,8 @@ class WPForms_Field_Phone extends WPForms_Field {
 		// Load International Telephone Input library - https://github.com/jackocnr/intl-tel-input.
 		wp_enqueue_script(
 			'wpforms-smart-phone-field',
-			WPFORMS_PLUGIN_URL . "pro/assets/js/vendor/jquery.intl-tel-input{$min}.js",
-			array( 'jquery' ),
+			WPFORMS_PLUGIN_URL . 'assets/pro/lib/intl-tel-input/jquery.intl-tel-input.min.js',
+			[ 'jquery' ],
 			self::INTL_VERSION,
 			true
 		);
@@ -244,19 +246,20 @@ class WPForms_Field_Phone extends WPForms_Field {
 		// Placeholder.
 		$this->field_option( 'placeholder', $field );
 
-		// Hide Label.
-		$this->field_option( 'label_hide', $field );
-
 		// Default value.
 		$this->field_option( 'default_value', $field );
 
 		// Custom CSS classes.
 		$this->field_option( 'css', $field );
 
+		// Hide Label.
+		$this->field_option( 'label_hide', $field );
+
 		// Options close markup.
-		$args = array(
+		$args = [
 			'markup' => 'close',
-		);
+		];
+
 		$this->field_option( 'advanced-options', $field, $args );
 	}
 
@@ -270,13 +273,14 @@ class WPForms_Field_Phone extends WPForms_Field {
 	public function field_preview( $field ) {
 
 		// Define data.
-		$placeholder = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
+		$placeholder   = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
+		$default_value = ! empty( $field['default_value'] ) ? $field['default_value'] : '';
 
 		// Label.
 		$this->field_preview_option( 'label', $field );
 
 		// Primary input.
-		echo '<input type="text" placeholder="' . esc_attr( $placeholder ) . '" class="primary-input" disabled>';
+		echo '<input type="text" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $default_value ) . '" class="primary-input" readonly>';
 
 		// Description.
 		$this->field_preview_option( 'description', $field );

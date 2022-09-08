@@ -49,7 +49,15 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 		init: function() {
 
 			$( app.ready );
-			$( window ).on( 'load', app.load );
+			$( window ).on( 'load', function() {
+
+				// in case of jQuery 3.+ we need to wait for an `ready` event first.
+				if ( typeof $.ready.then === 'function' ) {
+					$.ready.then( app.load );
+				} else {
+					app.load();
+				}
+			} );
 		},
 
 		/**
@@ -187,6 +195,14 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 			$div.next().fadeIn();
 			el.$sectionToggles.hide();
 			el.$sectionGoBack.fadeIn();
+
+			// Set focus to the field that is currently displayed.
+			$.each( [ el.$selectPage, el.$newPageTitle ], function() {
+				if ( this.is( ':visible' ) ) {
+					this.focus();
+				}
+			} );
+
 			app.tutorialControl( 'Stop' );
 		},
 
@@ -203,6 +219,10 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 
 			el.$shortcode.hide();
 			el.$videoTutorial.toggle();
+
+			if ( el.$videoTutorial.attr( 'src' ) === 'about:blank' ) {
+				el.$videoTutorial.attr( 'src', wpforms_admin_form_embed_wizard.video_url );
+			}
 
 			if ( el.$videoTutorial[0].src.indexOf( '&autoplay=1' ) < 0 ) {
 				app.tutorialControl( 'Play' );
@@ -249,7 +269,6 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 			el.$shortcodeInput.val( '[wpforms id="' + vars.formId + '" title="false"]' );
 			el.$shortcode.toggle();
 		},
-
 
 		/**
 		 * Copies the shortcode embed code to the clipboard.
@@ -339,15 +358,13 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 				content: wpforms_builder.exit_confirm,
 				icon: 'fa fa-exclamation-circle',
 				type: 'orange',
-				backgroundDismiss: false,
-				closeIcon: false,
+				closeIcon: true,
 				buttons: {
 					confirm: {
 						text: wpforms_builder.save_embed,
 						btnClass: 'btn-confirm',
 						keys: [ 'enter' ],
 						action: function() {
-
 							WPFormsBuilder.formSave().done( app.embedPageRedirect );
 						},
 					},
@@ -358,6 +375,9 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 							app.embedPageRedirect();
 						},
 					},
+				},
+				onClose: function() {
+					el.$sectionGo.find( 'button' ).prop( 'disabled', false );
 				},
 			} );
 		},
@@ -424,7 +444,6 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 
 			// Regular wizard and wizard in Challenge has differences.
 			el.$wizard.toggleClass( 'wpforms-challenge-popup', vars.isChallengeActive );
-			el.$wizard.find( '.wpforms-admin-popup-close' ).toggle( ! vars.isChallengeActive );
 			el.$wizard.find( '.wpforms-admin-popup-content-regular' ).toggle( ! vars.isChallengeActive );
 			el.$wizard.find( '.wpforms-admin-popup-content-challenge' ).toggle( vars.isChallengeActive );
 
@@ -451,6 +470,8 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 
 			el.$wizardContainer.fadeOut();
 			app.initialStateToggle();
+
+			$( document ).trigger( 'wpformsWizardPopupClose' );
 		},
 
 		/**
@@ -459,6 +480,10 @@ var WPFormsFormEmbedWizard = window.WPFormsFormEmbedWizard || ( function( docume
 		 * @since 1.6.2
 		 */
 		initTooltip: function() {
+
+			if ( typeof $.fn.tooltipster === 'undefined' ) {
+				return;
+			}
 
 			var $dot = $( '<span class="wpforms-admin-form-embed-wizard-dot">&nbsp;</span>' ),
 				isGutengerg = app.isGutenberg(),

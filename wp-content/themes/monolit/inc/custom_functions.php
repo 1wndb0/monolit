@@ -93,6 +93,51 @@ function getImageUrl($post): string
     return get_the_post_thumbnail_url($post) ?: $defaultImage;
 }
 
+function getImg($data = []): string
+{
+    $title = '';
+    $alt = '';
+    $url = $data['url'] ?? get_template_directory_uri() . '/assets/img/noimage.svg';
+
+    $href = sprintf('src="%s"', $url);
+
+    if ($data['title']) {
+        $title = sprintf('title="%s"', $data['title']);
+    }
+
+    if ($data['alt']) {
+        $alt = sprintf('alt="%s"', $data['alt']);
+    }
+
+    return sprintf('<%1$s %2$s %3$s %4$s>', 'img', $href, $title, $alt);
+}
+
+function getThumbnail($postId): string
+{
+    $alt = '';
+    $title = '';
+    $url = get_template_directory_uri() . '/assets/img/noimage.svg';
+    $imgId = get_post_thumbnail_id($postId);
+
+    if (!$imgId) {
+        return sprintf('<img href="%s">', $url);
+    }
+
+    if ($imgUrl = get_the_post_thumbnail_url($postId)) {
+        $url = sprintf('src="%s"', $imgUrl);
+    }
+
+    if ($imgTitle = get_the_title($imgId)) {
+        $title = sprintf('title="%s"', $imgTitle);
+    }
+
+    if ($imgAlt = get_post_meta($imgId, '_wp_attachment_image_alt', true)) {
+        $alt = sprintf('alt="%s"', $imgAlt);
+    }
+
+    return sprintf('<%1$s %2$s %3$s %4$s>', 'img', $url, $title, $alt);
+}
+
 function sendMessageToTelegram($name = '', $fields = '')
 {
     $apiToken = get_field('telegram_token', 'options') ?: false;

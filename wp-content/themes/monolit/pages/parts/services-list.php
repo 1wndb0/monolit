@@ -13,7 +13,7 @@ if (empty($posts)) {
 
 foreach ($posts as $post): ?>
     <li>
-        <a href="<?php get_page_link($post); ?>">
+        <a href="<?php echo get_page_link($post); ?>">
             <?php echo $post->post_title; ?>
         </a>
     </li>

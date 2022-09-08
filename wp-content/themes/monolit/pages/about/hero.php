@@ -2,8 +2,6 @@
 if (empty($fields)) {
     return;
 }
-
-$thumbnail = get_the_post_thumbnail_url();
 ?>
 
 <section class="about_us" style="background-image: url(<?php echo $fields['home_top_img']; ?>);">
@@ -16,9 +14,9 @@ $thumbnail = get_the_post_thumbnail_url();
             <?php getField($fields['home_title'], 'block_about_history', 'p'); ?>
             <?php getField($fields['home_short_description'], 'block_about_text', 'p'); ?>
 
-            <?php if ($thumbnail): ?>
+            <?php if (!empty($id)): ?>
                 <div class="block_about_photo_container">
-                    <img src="<?php echo $thumbnail; ?>" alt="Photo">
+                    <?php echo getThumbnail($id); ?>
                 </div>
             <?php endif; ?>
         </div>
