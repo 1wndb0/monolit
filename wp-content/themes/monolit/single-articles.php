@@ -1,12 +1,7 @@
 <?php
-/*
- * Template name: Прайс
- */
 get_header();
-$page = get_post();
 breadcrumbs();
-
-get_template_part_var('pages/general/price', ['main_title' => true]); ?>
+?>
 
     <section class="article_main">
         <div class="container">

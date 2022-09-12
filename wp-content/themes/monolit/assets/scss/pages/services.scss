@@ -3,12 +3,12 @@
 }
 
 .services_list {
-    margin: 0 -5px;
+    padding: 0 16px;
 
     @media (min-width: 570px) {
         display: flex;
         flex-wrap: wrap;
-        margin: 0 -15px;
+        padding: 0 5px;
     }
 }
 

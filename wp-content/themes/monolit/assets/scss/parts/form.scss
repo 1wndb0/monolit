@@ -16,8 +16,9 @@
 .wpforms-form {
     input {
         width: 100% !important;
+        max-width: 100% !important;
         outline: none !important;
-        border: none !important;
+        border: 1px solid transparent !important;
         color: #a5a5a5 !important;
         padding: 15px 20px !important;
         appearance: none !important;
@@ -34,12 +35,18 @@
         }
     }
 
+    input, textarea {
+        &:focus, &:active {
+            border-color: #007cc2 !important;
+        }
+    }
+
     textarea {
         resize: none !important;
         height: 150px !important;
         background-color: #f2f2f2 !important;
         outline: none !important;
-        border: none !important;
+        border: 1px solid transparent !important;
         color: #a5a5a5 !important;
         padding: 15px 20px !important;
         appearance: none !important;
@@ -94,6 +101,12 @@
         margin: 3px 0 !important;
         opacity: 0.7 !important;
     }
+
+    @media (max-width: 600px) {
+        .contact-form-tel-wrap {
+            width: 100% !important;
+        }
+    }
 }
 
 .contact-form-phone {
@@ -129,7 +142,7 @@
     a {
         position: relative !important;
         color: rgba(22, 161, 238, 1) !important;
-        font-size: 20px !important;
+        font-size: 18px !important;
         font-weight: 600 !important;
         letter-spacing: 3px !important;
         text-decoration: none !important;

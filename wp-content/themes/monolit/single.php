@@ -1,6 +1,6 @@
 <?php
 get_header();
-$id = get_the_ID();
+breadcrumbs();
 ?>
 
     <section class="services_main">

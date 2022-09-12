@@ -6,7 +6,7 @@ $number = 0;
 
 <section class="article_main">
     <div class="container">
-        <?php getField($title, 'services_main_title', 'h1'); ?>
+        <?php titleHtml($title, $main_title ?? false); ?>
         <?php if (!empty($list)): ?>
             <div class="article_content">
                 <table style="border-collapse: collapse; width: 1007.33px; height: 616px; background-color: #f3f3f3; border-color: #ced4d9; border-style: dotted; margin-left: auto; margin-right: auto;"

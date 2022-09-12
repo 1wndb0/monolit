@@ -9,7 +9,7 @@ if (empty($items)) {
 ?>
 
 <section class="asking">
-    <?php titleHtml($title); ?>
+    <?php titleHtml($title, $main_title ?? false); ?>
 
     <?php foreach ($items as $item): ?>
         <div class="asking_item">
