@@ -93,10 +93,8 @@ function getImageUrl($post): string
     return get_the_post_thumbnail_url($post) ?: $defaultImage;
 }
 
-function getImg($data = []): string
+function getImg($data = [], $class = '', $alt = '', $title = ''): string
 {
-    $title = '';
-    $alt = '';
     $url = $data['url'] ?? get_template_directory_uri() . '/assets/img/noimage.svg';
 
     $href = sprintf('src="%s"', $url);
@@ -109,7 +107,11 @@ function getImg($data = []): string
         $alt = sprintf('alt="%s"', $data['alt']);
     }
 
-    return sprintf('<%1$s %2$s %3$s %4$s>', 'img', $href, $title, $alt);
+    if ($class) {
+        $class = sprintf('class="%s"', $class);
+    }
+
+    return sprintf('<%1$s %2$s %3$s %4$s %5$s>', 'img', $class, $href, $title, $alt);
 }
 
 function getThumbnail($postId): string

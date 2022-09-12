@@ -25,17 +25,17 @@ if (empty($images)) {
                         <div class="partners_slide_position">
                             <div class="prev_slide-partners">
                                 <a class="our_partners_item_img_container">
-                                    <img src="<?php echo $images[--$index]; ?>" alt="">
+                                    <?php echo getImg($images[--$index]); ?>
                                 </a>
                             </div>
                             <div class="current_slide-partners">
                                 <a class="our_partners_item_img_container">
-                                    <img src="<?php echo $image; ?>" alt="">
+                                    <?php echo getImg($image); ?>
                                 </a>
                             </div>
                             <div class="next_slide-partners">
                                 <a class="our_partners_item_img_container">
-                                    <img src="<?php echo $images[++$index]; ?>" alt="">
+                                    <?php echo getImg($images[++$index]); ?>
                                 </a>
                             </div>
                         </div>

@@ -16,12 +16,11 @@ if (empty($fields)) {
                 <div class="our_values_content">
                     <?php foreach ($fields['home_worth_list'] as $item): ?>
                         <div class="our_values_item">
-                            <?php if ($item['img']): ?>
-                                <div class="value_item_icon">
-                                    <img src="<?php echo $item['img']; ?>" alt="Photo">
-                                </div>
-                            <?php endif;
+                            <div class="value_item_icon">
+                                <?php echo getImg($item['img']); ?>
+                            </div>
 
+                            <?php
                             getField($item['title'], 'value_item_title_blu', 'p');
                             getField($item['subtitle'], 'value_item_title', 'p');
                             getField($item['text'], 'value_item_text', 'p');

@@ -28,7 +28,7 @@ $data = [
                                 <a href="<?php echo $listItem['photo'] ?>"
                                    target="_blank"
                                    class="photo_galery_img_container">
-                                    <img src="<?php echo $listItem['photo'] ?>" alt="Фото 3">
+                                    <?php echo getImg($listItem['photo']); ?>
                                 </a>
                                 <p class="photo_title"><?php echo __('Фото', 'monolit') . ' ' .  intval($index + 1); ?></p>
                                 <p class="photo_data"><?php echo $listItem['date'] ?></p>

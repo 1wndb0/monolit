@@ -22,17 +22,17 @@ if (empty($images)) {
                     <div class="slideGallery">
                         <div class="gallery_slide_position">
                             <a class="prev_slide">
-                                <img src="<?php echo $images[--$index]; ?>" alt="Фотография 5">
+                                <?php echo getImg($images[--$index]); ?>
                                 <p></p>
                             </a>
-                            <a class="current_slide" data-href="<?php echo $image; ?>">
-                                <img src="<?php echo $image; ?>" alt="Фотография 1">
+                            <a class="current_slide" data-href="<?php echo $image['url']; ?>">
+                                <?php echo getImg($image); ?>
                                 <p class="photo_name">
                                     <?php echo $photoName . intval($index + 2); ?>
                                 </p>
                             </a>
                             <a class="next_slide">
-                                <img src="<?php echo $images[++$index]; ?>" alt="Фотография 2">
+                                <?php echo getImg($images[++$index]); ?>
                                 <p></p>
                             </a>
                         </div>

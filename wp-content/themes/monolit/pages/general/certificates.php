@@ -19,23 +19,22 @@ if (empty($images)) {
             <button class="carousel-button prev certif_prev_btn" data-certif-button="prev"></button>
             <button class="carousel-button next certif_next_btn" data-certif-button="next"></button>
             <div class="slides" data-slides="">
-
                 <?php foreach ($images as $index => $image): ?>
                     <div class="slideCertif">
                         <div class="certif_slide_position">
                             <div class="prev_slide-certif">
                                 <a class="our_certif_item_img_container">
-                                    <img src="<?php echo $images[--$index]; ?>" alt="">
+                                    <?php echo getImg($images[--$index]); ?>
                                 </a>
                             </div>
                             <div class="current_slide-certif">
                                 <a class="our_certif_item_img_container">
-                                    <img src="<?php echo $image; ?>" alt="">
+                                    <?php echo getImg($image); ?>
                                 </a>
                             </div>
                             <div class="next_slide-certif">
                                 <a class="our_certif_item_img_container">
-                                    <img src="<?php echo $images[++$index]; ?>" alt="">
+                                    <?php echo getImg($images[++$index]); ?>
                                 </a>
                             </div>
                         </div>

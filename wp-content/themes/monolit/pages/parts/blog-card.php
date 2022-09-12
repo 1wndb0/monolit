@@ -7,7 +7,7 @@ if (empty($post)) {
 <div class="container_blog_item">
     <div class="blog_img_container">
         <a href="<?php the_permalink($post); ?>">
-            <img src="<?php echo getImageUrl($post); ?>" alt="<?php echo $post->post_title; ?>">
+            <?php echo getThumbnail($post->ID); ?>
         </a>
     </div>
     <div class="blog_item_text">
