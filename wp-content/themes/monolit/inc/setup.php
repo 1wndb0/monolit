@@ -4,11 +4,43 @@ add_action('wp_enqueue_scripts', 'register_scripts');
 add_action('after_setup_theme', 'theme_setup_settings');
 add_action('admin_menu', 'remove_default_post_types');
 add_action('wpforms_process_complete', 'wpf_dev_process_complete', 10, 4);
+add_action('wp_head', 'wp_head_call');
+add_action('wp_body_open', 'wp_body_open_call');
 
 add_filter('upload_mimes', 'upload_allow_types');
 add_filter('show_admin_bar', '__return_false');
 add_filter('gutenberg_use_widgets_block_editor', '__return_false');
 add_filter('use_widgets_block_editor', '__return_false');
+
+function wp_head_call()
+{
+    $showTag = get_field('google_tags_show', 'options');
+    if (!$showTag) {
+        return;
+    }
+
+    $script = get_field('google_tag_head', 'options');
+    if (!$script) {
+        return;
+    }
+
+    echo $script;
+}
+
+function wp_body_open_call()
+{
+    $showTag = get_field('google_tags_show', 'options');
+    if (!$showTag) {
+        return;
+    }
+
+    $script = get_field('google_tag_body', 'options');
+    if (!$script) {
+        return;
+    }
+
+    echo $script;
+}
 
 function register_scripts()
 {
@@ -45,9 +77,9 @@ function upload_allow_types($types)
 function theme_setup_settings()
 {
     register_nav_menus([
-        'main_header'  => 'Main Header',
+        'main_header' => 'Main Header',
         'our_services' => 'Our Services',
-        'our_company'  => 'Our Company',
+        'our_company' => 'Our Company',
     ]);
 
     add_post_type_support('page', 'excerpt');
@@ -61,9 +93,9 @@ function theme_setup_settings()
         acf_add_options_page([
             'page_title' => __('Общие настройки', 'monolit'),
             'menu_title' => __('Общие настройки', 'monolit'),
-            'menu_slug'  => 'theme-general-settings',
+            'menu_slug' => 'theme-general-settings',
             'capability' => 'edit_posts',
-            'redirect'   => false,
+            'redirect' => false,
         ]);
     }
 }

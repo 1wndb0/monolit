@@ -3224,6 +3224,11 @@ tr {
     pointer-events: none
 }
 
+.crumbs.active span {
+    display: inline-block;
+    margin-left: 5px;
+}
+
 .contacts_links {
     display: inline-block;
     color: #007cc2;

@@ -1,31 +1,39 @@
 <?php
 /*
- * Template name: Услуга
+ * Template name: Услуги с подтипами
  */
+
 get_header();
-$post = get_post();
 breadcrumbs();
+
+$id = get_the_ID();
+
+$services = getPosts([
+    'post_parent' => $id
+]);
 ?>
 
     <section class="services_main">
         <div class="container">
             <h1 class="services_main_title">
-                <?php echo $post->post_title; ?>
+                <?php the_title(); ?>
             </h1>
-            <div class="servises_description active">
-                <?php echo apply_filters('the_content', $post->post_content); ?>
+            <?php get_template_part_var('pages/general/services', ['services' => $services]); ?>
+
+            <div class="servises_description">
+                <?php the_excerpt(); ?>
             </div>
         </div>
     </section>
+    <section class="our_projects">
+        <?php the_content(); ?>
+    </section>
 
 <?php
-get_template_part('pages/general/price');
 get_template_part('pages/general/contact-form-price');
 get_template_part('pages/general/benefits');
 get_template_part('pages/general/partners');
 get_template_part('pages/general/faq');
-get_template_part('pages/general/gallery');
 get_template_part('pages/general/contact-form-main');
 
 get_footer();
-

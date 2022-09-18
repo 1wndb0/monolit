@@ -1,6 +1,7 @@
 <?php
 
 get_header();
+breadcrumbs();
 ?>
 
     <section class="section">
