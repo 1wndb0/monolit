@@ -177,18 +177,19 @@ function getTelegramChatId($token = '')
     }
 
     $chatId = get_option('telegram_bot_id');
-
-    if ($chatId) {
-        return $chatId;
-    }
-
     $getJson = file_get_contents("https://api.telegram.org/bot$token/getUpdates");
     $getArray = json_decode($getJson, true);
-    $chatId = $getArray['result'][0]['message']['chat']['id'];
+    $id = $getArray['result'][0]['message']['chat']['id'] ?? $chatId;
 
-    update_option('telegram_bot_id', $chatId);
+    if (!$id) {
+        return false;
+    }
 
-    return $chatId;
+    if ($id !== $chatId) {
+        update_option('telegram_bot_id', $id);
+    }
+
+    return $id;
 }
 
 function breadcrumbs()

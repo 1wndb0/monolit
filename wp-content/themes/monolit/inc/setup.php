@@ -11,8 +11,16 @@ add_filter('upload_mimes', 'upload_allow_types');
 add_filter('show_admin_bar', '__return_false');
 add_filter('gutenberg_use_widgets_block_editor', '__return_false');
 add_filter('use_widgets_block_editor', '__return_false');
+add_filter('wpforms_frontend_confirmation_message', 'wpforms_confirmation_message');
+
 
 function wp_head_call()
+{
+    google_tag_manager();
+    fb_pixel_tag();
+}
+
+function google_tag_manager()
 {
     $showTag = get_field('google_tags_show', 'options');
     if (!$showTag) {
@@ -20,6 +28,21 @@ function wp_head_call()
     }
 
     $script = get_field('google_tag_head', 'options');
+    if (!$script) {
+        return;
+    }
+
+    echo $script;
+}
+
+function fb_pixel_tag()
+{
+    $showTag = get_field('fb_tags_show', 'options');
+    if (!$showTag) {
+        return;
+    }
+
+    $script = get_field('fb_tag_head', 'options');
     if (!$script) {
         return;
     }
@@ -57,10 +80,14 @@ function theme_styles()
 
 function theme_scripts()
 {
-    wp_enqueue_script('monolit-slider-script', get_template_directory_uri() . '/assets/js/slick-slider.js', ['jquery'], time(), true);
-    wp_enqueue_script('monolit-main-script', get_template_directory_uri() . '/assets/js/app.js', ['jquery'], time(), true);
-    wp_enqueue_script('monolit-script', get_template_directory_uri() . '/assets/js/scripts.js', ['jquery'], time(), true);
-    wp_enqueue_script('monolit-jquery-script', get_template_directory_uri() . '/assets/js/jquery.js', ['jquery'], time(), true);
+    wp_enqueue_script('monolit-slider-script', get_template_directory_uri() . '/assets/js/slick-slider.js', ['jquery'],
+        time(), true);
+    wp_enqueue_script('monolit-main-script', get_template_directory_uri() . '/assets/js/app.js', ['jquery'], time(),
+        true);
+    wp_enqueue_script('monolit-script', get_template_directory_uri() . '/assets/js/scripts.js', ['jquery'], time(),
+        true);
+    wp_enqueue_script('monolit-jquery-script', get_template_directory_uri() . '/assets/js/jquery.js', ['jquery'],
+        time(), true);
 
     wp_localize_script('monolit-main-script', 'myajax', [
         'ajaxurl' => admin_url('admin-ajax.php'),
@@ -120,4 +147,15 @@ function wpf_dev_process_complete($params, $entry, $form_data, $entry_id)
     }
 
     sendMessageToTelegram($formName, $fields);
+}
+
+function wpforms_confirmation_message()
+{
+    $customMessage = get_field('form_thank_you_message', 'options');
+
+    if ($customMessage) {
+        return $customMessage;
+    }
+
+    return __('Дякуємо, що звернулися до нас! Ми зв\'яжемося з вами найближчим часом.', 'monolit');
 }

@@ -109,6 +109,12 @@
     }
 }
 
+.wpforms-confirmation-container-full {
+    background: transparent !important;
+    border: 2px solid #007cc2 !important;
+    font-size: 20px !important;
+}
+
 .contact-form-phone {
     @media (min-width: 601px) {
         .wpforms-submit-container {
