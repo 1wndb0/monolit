@@ -135,8 +135,13 @@ function remove_default_post_types()
 
 function wpf_dev_process_complete($params, $entry, $form_data, $entry_id)
 {
-    $formName = $form_data['settings']['form_title'];
     $fields = [];
+
+    if (defined('ICL_LANGUAGE_CODE')) {
+        $slug = ICL_LANGUAGE_CODE === 'ru' ? __('Язык', 'monilit') : __('Мова', 'monolit');
+
+        $fields[$slug] = ICL_LANGUAGE_CODE;
+    }
 
     foreach ($params as $param) {
         if (!$param['value']) {
@@ -146,7 +151,10 @@ function wpf_dev_process_complete($params, $entry, $form_data, $entry_id)
         $fields[$param['name']] = $param['value'];
     }
 
-    sendMessageToTelegram($formName, $fields);
+    $dataSlug = defined('ICL_LANGUAGE_CODE') && ICL_LANGUAGE_CODE === 'ru' ? __('Дата и время', 'monolit') : __('Дата i час', 'monolit');
+    $fields[$dataSlug] = date('Y.m.d H:i:s');
+
+    sendMessageToTelegram($fields);
 }
 
 function wpforms_confirmation_message()

@@ -146,7 +146,7 @@ function getThumbnail($postId): string
     return sprintf('<%1$s %2$s %3$s %4$s>', 'img', $url, $title, $alt);
 }
 
-function sendMessageToTelegram($name = '', $fields = '')
+function sendMessageToTelegram($fields = '')
 {
     $apiToken = get_field('telegram_token', 'options') ?: false;
 
@@ -154,7 +154,7 @@ function sendMessageToTelegram($name = '', $fields = '')
         return;
     }
 
-    $text = "$name.\n";
+    $text = '';
 
     foreach ($fields as $key => $value) {
         $text .= "$key: $value\n";
@@ -164,7 +164,7 @@ function sendMessageToTelegram($name = '', $fields = '')
 
     $data = [
         'chat_id' => $chatID,
-        'text' => $text,
+        'text'    => $text,
     ];
 
     file_get_contents("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data));
@@ -176,20 +176,16 @@ function getTelegramChatId($token = '')
         return false;
     }
 
-    $chatId = get_option('telegram_bot_id');
+    $chatId = get_field('telegram_chat_id');
+
+    if ($chatId) {
+        return $chatId;
+    }
+
     $getJson = file_get_contents("https://api.telegram.org/bot$token/getUpdates");
     $getArray = json_decode($getJson, true);
-    $id = $getArray['result'][0]['message']['chat']['id'] ?? $chatId;
 
-    if (!$id) {
-        return false;
-    }
-
-    if ($id !== $chatId) {
-        update_option('telegram_bot_id', $id);
-    }
-
-    return $id;
+    return $getArray['result'][0]['message']['chat']['id'] ?? false;
 }
 
 function breadcrumbs()
