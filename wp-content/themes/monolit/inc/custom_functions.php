@@ -176,9 +176,9 @@ function getTelegramChatId($token = '')
         return false;
     }
 
-    $chatId = get_field('telegram_chat_id');
+    $chatId = get_field('telegram_chat_id', 'options');
 
-    if ($chatId) {
+    if (!empty($chatId)) {
         return $chatId;
     }
 
