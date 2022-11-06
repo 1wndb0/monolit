@@ -25,7 +25,7 @@ $data = [
                     <div class="photo_galery_container <?php echo $item['class'] ?? ''; ?>">
                         <?php foreach (array_slice($list, $item['offset'], $item['length'], true) as $index => $listItem): ?>
                             <div class="photo_galery_item_main">
-                                <a href="<?php echo $listItem['photo'] ?>"
+                                <a href="<?php echo $listItem['photo']['url'] ?>"
                                    target="_blank"
                                    class="photo_galery_img_container">
                                     <?php echo getImg($listItem['photo']); ?>

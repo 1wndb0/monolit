@@ -1,8 +1,14 @@
 <?php
 require "classes/Monolit_Menu.php";
+
 use classes\Monolit_Menu;
 
 $phone = get_field('phone', 'options');
+$current_lang = apply_filters('wpml_current_language', null);
+$search_text = 'Искать здесь...';
+if ($current_lang === 'uk') {
+    $search_text = 'Шукати тут...';
+}
 ?>
 
 <!doctype html>
@@ -23,12 +29,12 @@ $phone = get_field('phone', 'options');
         <a href="<?php echo get_bloginfo('url'); ?>" class="headerLogo" style="background-image: url(<?php echo get_field('logo', 'options'); ?>);"></a>
         <div class="primary-menu-container">
             <?php wp_nav_menu([
-                'theme_location'  => 'main_header',
-                'menu_class'      => 'menu-wrapper',
-                'walker'          => new Monolit_Menu()
+                'theme_location' => 'main_header',
+                'menu_class'     => 'menu-wrapper',
+                'walker'         => new Monolit_Menu(),
             ]) ?>
 
-            <?php do_action( 'wpml_footer_language_selector'); ?>
+            <?php do_action('wpml_footer_language_selector'); ?>
         </div>
 
         <div class="search_icon">
@@ -52,7 +58,7 @@ $phone = get_field('phone', 'options');
     </nav>
     <div class="search_flex">
         <form action="<?php bloginfo('url'); ?>/search/" method="GET" class="search-form">
-            <input type="text" name="query" class="search-form_input" id="search-form_input" value="<?php echo $_GET['query'] ?? ''; ?>" placeholder="<?php _e('Искать здесь...'); ?>">
+            <input type="text" name="query" class="search-form_input" id="search-form_input" value="<?php echo $_GET['query'] ?? ''; ?>" placeholder="<?php echo $search_text; ?>">
             <button type="submit" class="search-form_submit"></button>
         </form>
         <div class="search_result_flex">

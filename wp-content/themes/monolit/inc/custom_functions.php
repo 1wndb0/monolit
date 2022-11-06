@@ -20,11 +20,11 @@ function get_template_part_var($template, $data = [])
 function getPosts($params = []): array
 {
     $args = array_merge([
-        'post_type' => 'page',
-        'post_status' => 'publish',
-        'order' => 'asc',
+        'post_type'        => 'page',
+        'post_status'      => 'publish',
+        'order'            => 'asc',
         'suppress_filters' => false,
-        'numberposts' => -1,
+        'numberposts'      => -1,
 
     ], $params);
 
@@ -34,7 +34,7 @@ function getPosts($params = []): array
 function getServices($params = []): array
 {
     $args = array_merge([
-        'meta_key' => '_wp_page_template',
+        'meta_key'   => '_wp_page_template',
         'meta_value' => 'pages/service-type.php',
     ], $params);
 
@@ -54,7 +54,7 @@ function footerWidgets()
     }
 }
 
-function titleHtml($text = '', $mainTitle = false)
+function titleHtml($text = '', $mainTitle = false, $homeTitle = false)
 {
     if (!$text) {
         return;
@@ -64,6 +64,12 @@ function titleHtml($text = '', $mainTitle = false)
 
         <h1 class="services_main_title"><?php echo $text; ?></h1>
 
+    <?php } else if ($homeTitle) { ?>
+        <div class="title_container">
+            <span class="title_line"></span>
+            <h1 class="title"><?php echo $text; ?></h1>
+            <span class="title_line"></span>
+        </div>
     <?php } else { ?>
 
         <div class="title_container">

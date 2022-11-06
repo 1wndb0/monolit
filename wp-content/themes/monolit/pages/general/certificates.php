@@ -24,17 +24,17 @@ if (empty($images)) {
                         <div class="certif_slide_position">
                             <div class="prev_slide-certif">
                                 <a class="our_certif_item_img_container">
-                                    <?php echo getImg($images[--$index]); ?>
+                                    <?php echo getImg($images[--$index], 'not_lazy'); ?>
                                 </a>
                             </div>
                             <div class="current_slide-certif">
                                 <a class="our_certif_item_img_container">
-                                    <?php echo getImg($image); ?>
+                                    <?php echo getImg($image,'not_lazy'); ?>
                                 </a>
                             </div>
                             <div class="next_slide-certif">
                                 <a class="our_certif_item_img_container">
-                                    <?php echo getImg($images[++$index]); ?>
+                                    <?php echo getImg($images[++$index], 'not_lazy'); ?>
                                 </a>
                             </div>
                         </div>

@@ -25,17 +25,17 @@ if (empty($images)) {
                         <div class="partners_slide_position">
                             <div class="prev_slide-partners">
                                 <a class="our_partners_item_img_container">
-                                    <?php echo getImg($images[--$index]); ?>
+                                    <?php echo getImg($images[--$index], 'not_lazy'); ?>
                                 </a>
                             </div>
                             <div class="current_slide-partners">
                                 <a class="our_partners_item_img_container">
-                                    <?php echo getImg($image); ?>
+                                    <?php echo getImg($image, 'not_lazy'); ?>
                                 </a>
                             </div>
                             <div class="next_slide-partners">
                                 <a class="our_partners_item_img_container">
-                                    <?php echo getImg($images[++$index]); ?>
+                                    <?php echo getImg($images[++$index], 'not_lazy'); ?>
                                 </a>
                             </div>
                         </div>
