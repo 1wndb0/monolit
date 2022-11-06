@@ -17,7 +17,6 @@ if ($current_lang === 'uk') {
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="<?php echo get_template_directory_uri() . '/assets/img/favicon.ico' ?>">
-    <link rel="canonical" href="<?php echo canonicalUrl(); ?>">
     <title><?php echo titleTag(); ?></title>
     <?php wp_head(); ?>
 </head>

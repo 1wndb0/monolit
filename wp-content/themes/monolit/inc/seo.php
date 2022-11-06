@@ -30,11 +30,6 @@ add_filter('wpseo_twitter_card_type', function ($title) {
     return $title;
 });
 
-function canonicalUrl()
-{
-    return str_replace(['/ru', '/uk'], '', get_the_permalink());
-}
-
 function titleTag()
 {
     return get_post_meta(get_the_ID(), '_yoast_wpseo_title', true) ?: strip_tags(get_the_title());

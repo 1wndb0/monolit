@@ -1,4 +1,10 @@
 <?php
+$certShow = get_field('cert_hide', 'options');
+
+if ($certShow) {
+    return;
+}
+
 $title = get_field('cert_title', 'options');
 $images = get_field('cert_gallery', 'options');
 

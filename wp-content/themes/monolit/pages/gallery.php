@@ -16,6 +16,14 @@ $data = [
 ?>
 
     <section class="photo_galery_main">
+        <div class="photo_gallery_lightbox">
+            <div id="gallery-lbox" class="photo_gallery_lightbox__item">
+                <img id="lightbox-img" src="<?php echo get_template_directory_uri() . '/assets/img/noimage.svg'; ?>">
+            </div>
+            <div class="photo_gallery_lightbox__close">
+                <img src="<?php echo get_template_directory_uri() . '/assets/img/close.svg'; ?>">
+            </div>
+        </div>
         <div class="container">
             <h1 class="photo_galery_main_title"><?php echo $post->post_title; ?></h1>
             <?php if (!empty($list)): ?>
@@ -25,11 +33,10 @@ $data = [
                     <div class="photo_galery_container <?php echo $item['class'] ?? ''; ?>">
                         <?php foreach (array_slice($list, $item['offset'], $item['length'], true) as $index => $listItem): ?>
                             <div class="photo_galery_item_main">
-                                <a href="<?php echo $listItem['photo']['url'] ?>"
-                                   target="_blank"
+                                <div data-href="<?php echo $listItem['photo']['url'] ?>"
                                    class="photo_galery_img_container">
                                     <?php echo getImg($listItem['photo']); ?>
-                                </a>
+                                </div>
                                 <p class="photo_title"><?php echo __('Фото', 'monolit') . ' ' .  intval($index + 1); ?></p>
                                 <p class="photo_data"><?php echo $listItem['date'] ?></p>
                             </div>
