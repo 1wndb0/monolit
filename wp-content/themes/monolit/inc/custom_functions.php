@@ -148,9 +148,10 @@ function getThumbnail($postId): string
 
 function sendMessageToTelegram($fields = '')
 {
-    $apiToken = get_field('telegram_token', 'options') ?: false;
+    $apiToken = get_field('telegram_token', 'options');
+    $chatId = get_field('telegram_chat_id', 'options');
 
-    if (!$apiToken) {
+    if (!$apiToken || !$chatId) {
         return;
     }
 
@@ -160,32 +161,12 @@ function sendMessageToTelegram($fields = '')
         $text .= "$key: $value\n";
     }
 
-    $chatID = getTelegramChatId($apiToken);
-
     $data = [
-        'chat_id' => $chatID,
+        'chat_id' => $chatId,
         'text'    => $text,
     ];
 
     file_get_contents("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data));
-}
-
-function getTelegramChatId($token = '')
-{
-    if (!$token) {
-        return false;
-    }
-
-    $chatId = get_field('telegram_chat_id', 'options');
-
-    if (!empty($chatId)) {
-        return $chatId;
-    }
-
-    $getJson = file_get_contents("https://api.telegram.org/bot$token/getUpdates");
-    $getArray = json_decode($getJson, true);
-
-    return $getArray['result'][0]['message']['chat']['id'] ?? false;
 }
 
 function breadcrumbs()
